@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Calculate Yours Month Expenses</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css" type="text/css"/>
+    <link rel="stylesheet" href="/css/site.css" type="text/css" />
+</head>
+<body>
+    <nav class="navbar navbar-default">
+
+    <div class="menu">
+       
+        <ul class="menu nav nav-tabs">
+            <li class="active"><a href="/">Home</a></li>
+            <li><a href="/about">About</a></li>
+            <li></li>
+              {{#if currentUser}}
+                <li><a href="/users/profile/{{currentUser.username}}">{{currentUser.username}}</a></li>
+                <li><a href="/createProduct">Create Product</a></li>
+                <li>
+                    <form id="logout-form" action="/users/logout" method="POST"></form>
+                    <a href="javascript:document.getElementById('logout-form').submit()">Logout</a>
+                </li>
+            {{else}}
+                <li><a href="/users/register">REGISTER</a></li>
+                <li><a href="/users/login">LOGIN</a></li>
+            {{/if}}
+             {{#if isAdmin}}
+              
+            {{/if}}
+           
+        </ul>
+    </div>
+    
+    </nav>
+        
+    <div class="container-fluid">
+        <div class="page-header">
+        {{#if globalError}}
+            <div class="container">
+                
+            <h3>{{globalError}}</h3>
+            </div>
+        {{/if}}
+        
+        {{{body}}}
+
+        </div>
+    </div>
+
+
+    <script src="/js/bootstrap.min.js"></script>
+</body>
+</html>

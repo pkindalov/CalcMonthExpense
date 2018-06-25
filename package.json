@@ -1,0 +1,32 @@
+{
+  "name": "architecture-skeleton",
+  "version": "0.0.1",
+  "description": "Skeleton of project from live demo on lesson architecture and authentication",
+  "main": "index.js",
+  "engines": {
+    "node": "6.10.3"
+  },
+  "keywords": [
+    "skeleton",
+    "project",
+    "live",
+    "demo",
+    "lesson",
+    "architecture",
+    "authentication",
+    "nodejs",
+    "javascript"
+  ],
+  "author": "r3v3nan7",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "1.17.2",
+    "cookie-parser": "1.4.3",
+    "express": "4.15.3",
+    "express-handlebars": "3.0.0",
+    "express-session": "1.15.3",
+    "mongoose": "4.10.4",
+    "passport": "0.3.2",
+    "passport-local": "1.0.0"
+  }
+}
