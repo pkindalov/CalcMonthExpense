@@ -1,0 +1,22 @@
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12">
+            {{#if expense}}
+            <p>Expense maded on {{expense.date}}</p>
+            <p>Products buyed on this date</p>
+            {{#each expense.products}}
+                <p>Product name: {{this.name}}</p>
+                <p><img src={{this.photo}} alt={{this.name}} /></p>
+                <p>Product price: {{this.price}}</p>
+            {{/each}}
+
+            <p>Reason for buying this: {{expense.description}}</p>
+            <p>Do you really need these products? {{expense.isItAbsolutelyNeeded}}</p>
+        </div>
+
+        {{else}}
+            You have no expenses on this date.
+        {{/if}}
+    </div>
+</div>
