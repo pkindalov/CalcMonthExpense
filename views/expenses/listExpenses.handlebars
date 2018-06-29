@@ -1,0 +1,22 @@
+<div class="container-fluid">
+
+{{#each expenses}}
+<div class="row">
+    <div class="col-lg-6">
+        <p>
+            Expense for <a class="btn btn-primary" href="/expenseDetails?id={{this._id}}">{{this.date}}</a>
+            <a class="btn btn-success" href="/editExpense?id={{this._id}}">Edit</a>
+            <a class="btn btn-danger" href="/deleteExpense?id={{this._id}}">Delete</a>
+        </p>
+    </div>
+</div>
+{{/each}}
+
+{{#if hasPrevPage}}
+    <a href="/searchExpenses?dateFrom={{dateFrom}}&dateTo={{dateTo}}&page={{prevPage}}">Prev</a>
+{{/if}}    
+
+{{#if hasNextPage}}
+       <a href="/searchExpenses?dateFrom={{dateFrom}}&dateTo={{dateTo}}&page={{nextPage}}">Next</a>
+{{/if}}
+</div>

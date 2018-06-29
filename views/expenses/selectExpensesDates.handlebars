@@ -1,0 +1,78 @@
+ <link rel="stylesheet" href="/css/styles.css">
+
+<div class="container">
+
+<div class="row">
+    <div class="col-lg-12">
+        <p>
+            {{#if globalError}}
+                {{globalError}}
+            {{/if}}
+        </p>
+        <h3>Select for a period between two dates</h3>
+        <form method="GET" action="/searchExpenses">
+              <div class="form-group">
+                <div class='input-group date'>
+                     <label for="dateFrom">Select from date:</label>
+                    <input class="form-control" name="dateFrom" /><br />
+                 
+                </div>
+
+            </div>
+
+               <div class='input-group date'>
+                     <label for="dateTo">Select end of period:</label>
+                    <input class="form-control" name="dateTo" /><br />
+                 
+                </div><br />
+
+                <button type="submit" class="btn btn-primary">Check Period</button>
+        </form>
+    </div>
+
+</div>
+
+<div class="row">
+
+    <div class="col-lg-12">
+
+        <h3>Select to see expenses for one day</h3>
+
+         <form method="GET" action="/expenseForDay">
+              <div class="form-group">
+                <div class='input-group date'>
+                     <label for="dateFrom">Select from date:</label>
+                    <input class="form-control" name="date" /><br />
+                 
+                </div>
+
+            </div>
+
+           
+
+                <button type="submit" class="btn btn-primary">Check Date</button>
+        </form>
+
+    </div>
+
+
+</div>
+
+
+    <script
+			  src="https://code.jquery.com/jquery-3.3.1.min.js"
+			  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+			  crossorigin="anonymous"></script>
+
+  <script src="/js/datepicker.js"></script>
+    <script>
+        var inputFrom = document.querySelector('input[name="dateFrom"]');
+        var inputTo = document.querySelector('input[name="dateTo"]');
+        var inputDate = document.querySelector('input[name="date"]');
+        var picker = datepicker(inputFrom);
+        var picker2 = datepicker(inputTo);
+        var picker3 = datepicker(inputDate);
+
+    </script>
+
+</div>
