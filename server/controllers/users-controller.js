@@ -1,7 +1,8 @@
 const encryption = require('../utilities/encryption')
 const User = require('mongoose').model('User')
-// const Thread = require('mongoose').model('Thread')
-const errorHandler = require('../utilities/error-handler')
+const Expense = require('../data/Expense')
+const dateHelpers = require('../utilities/dateHelpers')
+// const errorHandler = require('../utilities/error-handler')
 
 module.exports = {
   registerGet: (req, res) => {
@@ -70,64 +71,28 @@ module.exports = {
     res.redirect('/')
   },
 
-  getUserProfil: (req, res) => {
-    // let userName = req.params.username
-    let id = req.user.id
-    let pageSize = 2
-    let page = parseInt(req.query.page) || 1
-    // console.log(id)
+  getUserProfile: (req, res) => {
+    let userId = req.query.profile
 
-    // Thread
-    //           .find({'author': ObjectId('id')})
-    //           .then(thread => {
-    //             console.log(thread)
-    //             User
-    //                     .findById(id)
-    //                     .then(user => {
-    //                       res.render('users/profil', {
-    //                         thread: thread,
-    //                         user: user
-    //                       })
-    //                     })
-    //           })
+    Expense
+      .find({'user': userId})
+      .sort('-date')
+      .limit(5)
+      .then(expenses => {
+        let today = dateHelpers.getTodayDateWithoutTime(new Date())
+        today = new Date(today)
+        // console.log(today)
 
-    User
-          .findById(id)
-          .then(user => {
-            Thread
-                        .find({'author': id})
-                        .sort({'date': -1})
-                        .populate('answers')
-                        .skip((page - 1) * pageSize)
-                        .limit(pageSize)
-                        // .populate('answers')
-                        .then(thread => {
-                          // console.log(thread)
-                          res.render('users/profil', {
-                            thread: thread,
-                            user: user,
-                            hasPrev: page > 1,
-                            hasNext: thread.length > 0,
-                            nextPage: page + 1,
-                            prevPage: page - 1
-                          })
-                        })
+        Expense
+          .findOne({'user': userId, 'date': today})
+          .then(todayExpense => {
+            // console.log(todayExpense)
+
+            res.render('users/profile', {
+              expenses: expenses,
+              todayExpense: todayExpense
+            })
           })
-          .catch(err => {
-            let errMessage = errorHandler.handleMongooseError(err)
-            console.log(errMessage)
-          })
-
-    // User
-    //       .find({'username': userName})
-    //       .then(user => {
-    //         res.render('users/profil', {
-    //           user: user
-    //         })
-    //       })
-    //       .catch(err => {
-    //         let errMessage = errorHandler.handleMongooseError(err)
-    //         console.log(errMessage)
-    //       })
+      })
   }
 }

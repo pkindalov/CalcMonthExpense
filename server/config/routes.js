@@ -10,6 +10,7 @@ module.exports = (app) => {
   app.get('/users/login', controllers.users.loginGet)
   app.post('/users/login', controllers.users.loginPost)
   app.post('/users/logout', controllers.users.logout)
+  app.get('/users', auth.isAuthenticated, controllers.users.getUserProfile)
 
   app.get('/createProduct', auth.isAuthenticated, controllers.products.createProductGET)
   app.post('/createProduct', auth.isAuthenticated, controllers.products.createProductPOST)
@@ -19,6 +20,8 @@ module.exports = (app) => {
 
   app.get('/getExpensesPeriod', auth.isAuthenticated, controllers.expenses.getExpensesFromDateToDateGET)
   app.get('/searchExpenses', auth.isAuthenticated, controllers.expenses.getExpensesFromPeriodGET)
+  app.get('/expenseForDay', auth.isAuthenticated, controllers.expenses.getExpenseOnDate)
+  app.get('/expenseDetails', auth.isAuthenticated, controllers.expenses.expenseDetailsById)
 
   app.all('*', (req, res) => {
     res.status(404)

@@ -1,5 +1,6 @@
 const Expense = require('../data/Expense')
 const Product = require('../data/Product')
+const dateHelpers = require('../utilities/dateHelpers')
 
 module.exports = {
   createExpenseGET: (req, res) => {
@@ -23,12 +24,13 @@ module.exports = {
     let expenseDescription = reqBody.description
     let needed = (reqBody.needed === 'true')
     let authorOfExpense = req.user.id
+    let expenseProduct = reqBody.product
 
     Expense
       .create({
         user: authorOfExpense,
         date: convertedDate,
-        products: [],
+        products: expenseProduct,
         description: expenseDescription,
         isItAbsolutelyNeeded: needed
       })
@@ -38,7 +40,17 @@ module.exports = {
   },
 
   getExpensesFromDateToDateGET: (req, res) => {
-    res.render('expenses/selectExpensesDates')
+    let today = dateHelpers.getTodayDateWithoutTime(new Date())
+    let userId = req.user.id
+    today = new Date(today)
+
+    Expense
+     .findOne({'user': userId, 'date': today})
+     .then(todayExpense => {
+       res.render('expenses/selectExpensesDates', {
+         todayExpense: todayExpense
+       })
+     })
   },
 
   getExpensesFromPeriodGET: (req, res) => {
@@ -79,6 +91,41 @@ module.exports = {
           nextPage: page + 1
         })
       })
+  },
+
+  getExpenseOnDate: (req, res) => {
+    if (!req.query.date) {
+      res.locals.globalError = 'Date field cannot be empty'
+      res.render('expenses/selectExpensesDates', {
+        globalError: res.locals.globalError
+      })
+      return
+    }
+    let date = new Date(req.query.date)
+
+    Expense
+      .findOne({'date': date})
+      .populate('products')
+      .then(expense => {
+        // console.log(expense)
+        res.render('expenses/oneDateExpense', {
+          expense: expense
+        })
+      })
+  },
+
+  expenseDetailsById: (req, res) => {
+    let expenseId = req.query.id
+
+    Expense
+    .findById(expenseId)
+    .populate('products')
+    .then(expense => {
+      // console.log(expense)
+      res.render('expenses/expenseDetails', {
+        expense: expense
+      })
+    })
   }
 
 }
