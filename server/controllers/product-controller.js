@@ -11,9 +11,11 @@ module.exports = {
     let productName = reqBody.name
     let productPrice = reqBody.price
     let productPhoto = reqBody.photo
+    let productAuthor = req.user.id
 
     Product
         .create({
+          author: productAuthor,
           name: productName,
           price: productPrice,
           photo: productPhoto

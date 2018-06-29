@@ -14,6 +14,12 @@ module.exports = (app) => {
   app.get('/createProduct', auth.isAuthenticated, controllers.products.createProductGET)
   app.post('/createProduct', auth.isAuthenticated, controllers.products.createProductPOST)
 
+  app.get('/createExpense', auth.isAuthenticated, controllers.expenses.createExpenseGET)
+  app.post('/createExpense', auth.isAuthenticated, controllers.expenses.createExpensePOST)
+
+  app.get('/getExpensesPeriod', auth.isAuthenticated, controllers.expenses.getExpensesFromDateToDateGET)
+  app.get('/searchExpenses', auth.isAuthenticated, controllers.expenses.getExpensesFromPeriodGET)
+
   app.all('*', (req, res) => {
     res.status(404)
     res.send('404 Not found')
