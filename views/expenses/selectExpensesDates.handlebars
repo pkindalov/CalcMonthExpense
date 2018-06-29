@@ -4,6 +4,11 @@
 
 <div class="row">
     <div class="col-lg-12">
+
+         {{#if todayExpense}}   
+              <h3>You have expense for <a href="/expenseDetails?id={{todayExpense._id}}">today.</a></h3>
+        {{/if}}
+
         <p>
             {{#if globalError}}
                 {{globalError}}

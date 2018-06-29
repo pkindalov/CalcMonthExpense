@@ -25,12 +25,12 @@
 
              <div class="form-group">
                 <label for="product">Select product which you buy:</label>
-                <select  class="form-control"  name="needed" aria-describedby="productNeededHelp" placeholder="product which you buy">
+                <select  class="form-control"  name="product" aria-describedby="productNeededHelp" placeholder="product which you buy">
                    {{#each products}}
-                        <option value={{this.name}}>{{this.name}}</option>
+                        <option value={{this._id}}>{{this.name}}</option>
                    {{/each}}
                 </select>
-                <small id="productNeededHelp" class="form-text text-muted">Choose product which you buy. If is it empty just <a href="/createProduct">create a product</a></small>
+                <small id="productProductHelp" class="form-text text-muted">Choose product which you buy. If is it empty just <a href="/createProduct">create a product</a></small>
              </div>
 
              {{else}}
