@@ -6,7 +6,9 @@ const REQUIRED_VALIDATION_MESSAGE = '{PATH} is required'
 let expenseSchema = new mongoose.Schema({
   user: {type: ObjectId, ref: 'User'},
   date: {type: Date, default: Date.now, required: REQUIRED_VALIDATION_MESSAGE},
-  products: [{type: ObjectId, ref: 'Product'}]
+  products: [{type: ObjectId, ref: 'Product'}],
+  description: {type: String, required: REQUIRED_VALIDATION_MESSAGE},
+  isItAbsolutelyNeeded: {type: Boolean, required: REQUIRED_VALIDATION_MESSAGE}
 })
 
 let Expense = mongoose.model('Expense', expenseSchema)
