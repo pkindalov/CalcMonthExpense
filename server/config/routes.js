@@ -18,10 +18,10 @@ module.exports = (app) => {
   app.get('/selectProductForEdit', auth.isAuthenticated, controllers.products.selectProductForEdit)
   app.get('/editProduct', auth.isAuthenticated, controllers.products.editProductGET)
   app.post('/editProduct', auth.isAuthenticated, controllers.products.editProductPOST)
+  app.get('/deleteProduct', auth.isAuthenticated, controllers.products.deleteProductByIdGET)
 
   app.get('/createExpense', auth.isAuthenticated, controllers.expenses.createExpenseGET)
   app.post('/createExpense', auth.isAuthenticated, controllers.expenses.createExpensePOST)
-
   app.get('/getExpensesPeriod', auth.isAuthenticated, controllers.expenses.getExpensesFromDateToDateGET)
   app.get('/searchExpenses', auth.isAuthenticated, controllers.expenses.getExpensesFromPeriodGET)
   app.get('/expenseForDay', auth.isAuthenticated, controllers.expenses.getExpenseOnDate)

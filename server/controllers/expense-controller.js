@@ -34,9 +34,16 @@ module.exports = {
         description: expenseDescription,
         isItAbsolutelyNeeded: needed
       })
-      .then(
-        res.redirect('/')
-      )
+      .then(expense => {
+        Product
+            .findById(expenseProduct)
+            .then(product => {
+              product.expenses.push(expense._id)
+              product.save()
+
+              res.redirect('/')
+            })
+      })
   },
 
   getExpensesFromDateToDateGET: (req, res) => {
@@ -174,6 +181,13 @@ module.exports = {
       .then(expense => {
         expense.products.push(productId)
         expense.save()
+
+        Product
+          .findById(productId)
+          .then(product => {
+            product.expenses.push(expense._id)
+            product.save()
+          })
       })
 
     res.redirect(url)

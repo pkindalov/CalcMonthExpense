@@ -40,8 +40,17 @@ module.exports = {
         }
         expense.save()
 
-        res.redirect(url)
+        Product
+          .findById(productId)
+          .then(product => {
+            let pos = product.expenses.indexOf(expense._id)
+            if (pos > -1) {
+              product.expenses.splice(pos, 1)
+              product.save()
+            }
+          })
       })
+    res.redirect(url)
   },
 
   selectProductForEdit: (req, res) => {
@@ -86,5 +95,27 @@ module.exports = {
 
         res.redirect('/selectProductForEdit')
       })
+  },
+
+  deleteProductByIdGET: (req, res) => {
+    let productId = req.query.product
+
+    Product
+      .findByIdAndRemove(productId)
+      // .findByIdAndRemove(productId)
+      .populate('expenses')
+      .then(deletedProduct => {
+        let deletedProductId = deletedProduct._id
+
+        for (let expense of deletedProduct.expenses) {
+          if (expense.products.indexOf(deletedProductId) > -1) {
+            let pos = expense.products.indexOf(deletedProductId)
+            expense.products.splice(pos)
+            expense.save()
+          }
+        }
+      })
+
+    res.redirect('/')
   }
 }

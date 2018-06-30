@@ -5,6 +5,7 @@ const REQUIRED_VALIDATION_MESSAGE = '{PATH} is required'
 
 let productSchema = new mongoose.Schema({
   author: {type: ObjectId, ref: 'User'},
+  expenses: [{type: ObjectId, ref: 'Expense'}],
   name: {type: String, required: REQUIRED_VALIDATION_MESSAGE},
   price: {type: String, required: REQUIRED_VALIDATION_MESSAGE},
   photo: {type: String, required: REQUIRED_VALIDATION_MESSAGE}
