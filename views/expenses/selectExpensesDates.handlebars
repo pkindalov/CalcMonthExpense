@@ -9,6 +9,8 @@
               <h3>You have expense for <a href="/expenseDetails?id={{todayExpense._id}}">today.</a></h3>
         {{/if}}
 
+        <hr />
+
         <p>
             {{#if globalError}}
                 {{globalError}}
@@ -23,6 +25,8 @@
                  
                 </div>
 
+           
+
             </div>
 
                <div class='input-group date'>
@@ -33,7 +37,9 @@
 
                 <button type="submit" class="btn btn-primary">Check Period</button>
         </form>
+         <hr />
     </div>
+
 
 </div>
 
@@ -57,6 +63,10 @@
 
                 <button type="submit" class="btn btn-primary">Check Date</button>
         </form>
+        <hr />
+
+        <a href="/seeAllExpenses">See All Your Expenses</a>
+        <a href="/thisMonthBalance">This Month Expenses</a>
 
     </div>
 

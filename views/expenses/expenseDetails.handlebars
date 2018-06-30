@@ -1,18 +1,85 @@
+<script
+			  src="https://code.jquery.com/jquery-3.3.1.js"
+			  integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+			  crossorigin="anonymous"></script>
+		
+
+<script>
+    $(document).ready(function(){
+
+        $('.addProductContainer').hide()
+        let turnedOn = false
+
+        $('a[name="addProduct"]').on('click', function(){
+           
+             turnedOn = !turnedOn
+             if(turnedOn){
+                 $('.addProductContainer').show()
+             }else{
+                  $('.addProductContainer').hide()
+             }
+        })
+    })
+</script>
+
 
 <div class="container">
     <div class="row">
         <div class="col-lg-12">
             {{#if expense}}
-            <p>Expense maded on {{expense.date}}</p>
-            <p>Products buyed on this date</p>
+            <h4>Expense maded on {{expense.date}}</h4>
+            <h4>Products buyed on this date</h4>
+            <hr />
+            
             {{#each expense.products}}
                 <p>Product name: {{this.name}}</p>
                 <p><img src={{this.photo}} alt={{this.name}} /></p>
                 <p>Product price: {{this.price}}</p>
+                <hr /><br />
             {{/each}}
 
             <p>Reason for buying this: {{expense.description}}</p>
             <p>Do you really need these products? {{expense.isItAbsolutelyNeeded}}</p>
+
+            <hr />
+            <p><strong>Total Money Spent For Products Today: {{totalExpense}} lv</strong></p>
+            <p>
+                <a class="btn btn-primary" name="addProduct">Add Another Product</a>
+            </p>
+
+
+            <div class="addProductContainer">
+                <form method="POST" action="/addProductToExpense?id={{expense._id}}">
+                    {{#if availableProducts}}
+                     <div class="form-group">
+                        <label for="product">Select product which you buy:</label>
+                            <select  class="form-control"  name="product" aria-describedby="productNeededHelp" placeholder="product which you buy">
+                                {{#each products}}
+                                         <option value={{this._id}}>{{this.name}}</option>
+                                {{/each}}
+                            </select>
+                            <small id="productNeededHelp" class="form-text text-muted">Choose product which you buy. If is it empty just <a href="/createProduct">create a product</a></small>
+                        </div>
+
+                        <button class="btn btn-success" type="submit">Add</button>
+
+                    {{else}}
+
+                             <div class="form-group">
+                        <label for="product">Select product which you buy:</label>
+                            <select  class="form-control"  name="product" aria-describedby="productNeededHelp" placeholder="product which you buy">
+                                
+                            <option value="noavailable">You must create a product from a link below</option>
+                            
+                            </select>
+                            <small id="productNeededHelp" class="form-text text-muted">Choose product which you buy. If is it empty just <a href="/createProduct">create a product</a></small>
+                        </div>
+
+                    {{/if}}
+
+                </form>
+            </div>
+
         </div>
 
         {{else}}
