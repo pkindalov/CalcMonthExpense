@@ -2,7 +2,9 @@
 <div class="container">
     <div class="row">
         <div class="col-lg-12">
-            <h3>This month you have total <strong>{{expenses.length}}</strong> expenses</h3>
+            <h3>This month you have total 
+                <strong><a href="/searchExpenses?dateFrom={{startDate}}&dateTo={{endMonth}}">{{expenses.length}}</a></strong> expenses
+                </h3>
             <h3>Total Money Given <strong>{{totalExpenseSum}}</strong></h3>
             <hr />
         </div>

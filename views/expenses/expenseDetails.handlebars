@@ -8,7 +8,10 @@
     $(document).ready(function(){
 
         $('.addProductContainer').hide()
+        $('.removeProductContainer').hide()
+        
         let turnedOn = false
+        let removeProductButtonTurnedOn = false
 
         $('a[name="addProduct"]').on('click', function(){
            
@@ -19,6 +22,19 @@
                   $('.addProductContainer').hide()
              }
         })
+
+
+
+       $('a[name="removeProduct"]').on('click', function(){
+           
+             removeProductButtonTurnedOn = !removeProductButtonTurnedOn
+             if(removeProductButtonTurnedOn){
+                 $('.removeProductContainer').show()
+             }else{
+                  $('.removeProductContainer').hide()
+             }
+        })
+
     })
 </script>
 
@@ -79,6 +95,51 @@
 
                 </form>
             </div>
+
+
+
+
+
+           <p>
+                <a class="btn btn-danger" name="removeProduct">Remove Product</a>
+            </p>
+
+
+            <div class="removeProductContainer">
+                <form method="POST" action="/removeProductForExpense?id={{expense._id}}">
+                    {{#if availableProducts}}
+                     <div class="form-group">
+                        <label for="product">Select product for remove from this expense:</label>
+                            <select  class="form-control"  name="product" aria-describedby="productNeededHelp" placeholder="product which you buy">
+                                {{#each expense.products}}
+                                         <option value={{this._id}}>{{this.name}}</option>
+                                {{/each}}
+                            </select>
+                            <small id="productNeededHelp" class="form-text text-muted">Choose product which you buy. If is it empty just <a href="/createProduct">create a product</a></small>
+                        </div>
+
+                        <button class="btn btn-danger" type="submit">Remove</button>
+
+                    {{else}}
+
+                             <div class="form-group">
+                        <label for="product">Select product which you buy:</label>
+                            <select  class="form-control"  name="product" aria-describedby="productNeededHelp" placeholder="product which you buy">
+                                
+                            <option value="noavailable">You must create a product from a link below</option>
+                            
+                            </select>
+                            <small id="productNeededHelp" class="form-text text-muted">Choose product which you buy. If is it empty just <a href="/createProduct">create a product</a></small>
+                        </div>
+
+                    {{/if}}
+
+                </form>
+            </div>
+
+
+
+
 
         </div>
 
