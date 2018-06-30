@@ -9,6 +9,10 @@ module.exports = {
       monthIndex = '0' + (monthIndex + 1)
     }
 
+    if (day < 10) {
+      day = '0' + day
+    }
+
     let today = year + '-' + monthIndex + '-' + day
 
     return today
