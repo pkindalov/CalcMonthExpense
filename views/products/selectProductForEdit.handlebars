@@ -1,0 +1,44 @@
+
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-4"></div>
+        <div class="col-lg-4">
+
+            <form method="GET" action="/editProduct">
+                <div class="form-group">
+                    <label for="needed">Select product to edit</label>
+                         <select  class="form-control"  name="product" aria-describedby="producNeededHelp" placeholder="just select product for editing">
+                            {{#each products}}
+                                <option value={{this._id}}>{{this.name}}</option>
+                            {{/each}}
+                        </select>
+                <small id="productNeededHelp" class="form-text text-muted">Just select product for editing and click button to go forward with editing process</small><br /><br />
+
+                
+                <button class="btn btn-primary" type="submit">Go Edit</button>
+                 </div>
+             </form> 
+
+            <hr />
+
+
+             <form method="GET" action="/deleteProduct">
+                <div class="form-group">
+                    <label for="needed">Select product to <strong>DELETE</strong></label>
+                         <select  class="form-control"  name="product" aria-describedby="producNeededHelp" placeholder="just select product for editing">
+                            {{#each products}}
+                                <option value={{this._id}}>{{this.name}}</option>
+                            {{/each}}
+                        </select>
+                <small id="productNeededHelp" class="form-text text-muted">Just select product for editing and click button to go forward with editing process</small><br /><br />
+
+                
+                <button class="btn btn-danger" type="submit">Go DELETE</button>
+                 </div>
+             </form> 
+
+        </div>
+        <div class="col-lg-4"></div>
+    </div>
+</div>

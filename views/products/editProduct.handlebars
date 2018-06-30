@@ -1,0 +1,38 @@
+
+<div class="row">
+    <div class="col-lg-4"></div>
+    <div class="col-lg-4">
+        <p>
+            {{#if globalError}}       
+                 <h3>{{globalError}}</h3>     
+             {{/if}}
+        </p>
+
+        <form method="POST" action="/editProduct?product={{product._id}}">
+              <div class="form-group">
+                <label for="name">Product Name:</label>
+                <input type="text" name="name" value={{product.name}} class="form-control"  aria-describedby="productNameHelp" placeholder="Enter product's name">
+                <small id="productNameHelp" class="form-text text-muted">Just write a real name product</small>
+             </div>
+
+             <div class="form-group">
+                <label for="photo">Product Image:</label>
+                <input type="text" name="photo" value={{product.photo}} class="form-control"  aria-describedby="productPhotoHelp" placeholder="Enter photo's url">
+                <small id="productPhotoHelp" class="form-text text-muted">Just put a link of the image</small>
+             </div>
+
+             <div class="form-group">
+                <label for="price">Product Price:</label>
+                <input type="text" class="form-control"  name="price" value={{product.price}} aria-describedby="producPriceHelp" placeholder="Enter product's name">
+                <small id="productPriceHelp" class="form-text text-muted">Real price of the product. ONLY NUMBER</small>
+             </div>
+
+             <button type="submit" class="btn btn-primary">Save Changes</button>
+             <button type="reset" class="btn btn-warning">Clear</button>
+
+        </form>
+    </div>
+    <div class="col-lg-4"></div>
+</div>
+
+
