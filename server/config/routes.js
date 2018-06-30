@@ -22,6 +22,9 @@ module.exports = (app) => {
   app.get('/searchExpenses', auth.isAuthenticated, controllers.expenses.getExpensesFromPeriodGET)
   app.get('/expenseForDay', auth.isAuthenticated, controllers.expenses.getExpenseOnDate)
   app.get('/expenseDetails', auth.isAuthenticated, controllers.expenses.expenseDetailsById)
+  app.get('/seeAllExpenses', auth.isAuthenticated, controllers.expenses.seeAllExpenses)
+  app.post('/addProductToExpense', auth.isAuthenticated, controllers.expenses.addProductToExpense)
+  app.get('/thisMonthBalance', auth.isAuthenticated, controllers.expenses.thisMonthExpenses)
 
   app.all('*', (req, res) => {
     res.status(404)
