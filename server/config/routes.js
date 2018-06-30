@@ -14,6 +14,10 @@ module.exports = (app) => {
 
   app.get('/createProduct', auth.isAuthenticated, controllers.products.createProductGET)
   app.post('/createProduct', auth.isAuthenticated, controllers.products.createProductPOST)
+  app.post('/removeProductForExpense', auth.isAuthenticated, controllers.products.removeProductFromExpense)
+  app.get('/selectProductForEdit', auth.isAuthenticated, controllers.products.selectProductForEdit)
+  app.get('/editProduct', auth.isAuthenticated, controllers.products.editProductGET)
+  app.post('/editProduct', auth.isAuthenticated, controllers.products.editProductPOST)
 
   app.get('/createExpense', auth.isAuthenticated, controllers.expenses.createExpenseGET)
   app.post('/createExpense', auth.isAuthenticated, controllers.expenses.createExpensePOST)
@@ -25,6 +29,8 @@ module.exports = (app) => {
   app.get('/seeAllExpenses', auth.isAuthenticated, controllers.expenses.seeAllExpenses)
   app.post('/addProductToExpense', auth.isAuthenticated, controllers.expenses.addProductToExpense)
   app.get('/thisMonthBalance', auth.isAuthenticated, controllers.expenses.thisMonthExpenses)
+  app.get('/editExpense', auth.isAuthenticated, controllers.expenses.editExpenseByIdGET)
+  app.post('/editExpense', auth.isAuthenticated, controllers.expenses.editExpenseByIdPOST)
 
   app.all('*', (req, res) => {
     res.status(404)

@@ -190,7 +190,7 @@ module.exports = {
     let promises = []
 
     Expense
-      .find({'date': {'$gte': startDate, '$lte': endMonth}})
+      .find({'date': {'$gte': startDateConv, '$lte': endMonthConv}})
       // .find({'date': {'$gte': new Date(startDate), '$lte': new Date(endMonth)}})
       // .populate('products')
       .then(expenses => {
@@ -219,7 +219,9 @@ module.exports = {
 
                          res.render('expenses/thisMonthExpenses', {
                            expenses: expenses,
-                           totalExpenseSum: totalExpenseSum
+                           totalExpenseSum: totalExpenseSum,
+                           startDate: startDate,
+                           endMonth: endMonth
                          })
                        })
       })
@@ -229,6 +231,42 @@ module.exports = {
 
     // console.log(startDate)
     // console.log(endMonth)
+  },
+
+  editExpenseByIdGET: (req, res) => {
+    let expenseId = req.query.id
+    let dateFormatted = ''
+
+    Expense
+      .findById(expenseId)
+      .populate('products')
+      .then(expense => {
+        dateFormatted = dateHelpers.getTodayDateWithoutTime(expense.date)
+
+        res.render('expenses/editExpense', {
+          expense: expense,
+          dateFormatted: dateFormatted
+        })
+      })
+  },
+
+  editExpenseByIdPOST: (req, res) => {
+    let expenseId = req.query.id
+    let reqBody = req.body
+
+    let dateConv = new Date(reqBody.date)
+    let editedDescription = reqBody.description
+    let editedIsItAbsolutelyNeeded = reqBody.needed
+
+    Expense
+      .findById(expenseId)
+      .then(expense => {
+        expense.date = dateConv
+        expense.description = editedDescription
+        expense.isItAbsolutelyNeeded = editedIsItAbsolutelyNeeded
+        expense.save()
+        res.redirect('/editExpense?id=' + expenseId)
+      })
   }
 
 }
