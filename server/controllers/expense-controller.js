@@ -203,43 +203,44 @@ module.exports = {
     let startDateConv = new Date(startDate)
     let endMonthConv = new Date(endMonth)
 
-    let promises = []
+    // let promises = []
 
     Expense
       .find({'date': {'$gte': startDateConv, '$lte': endMonthConv}})
       // .find({'date': {'$gte': new Date(startDate), '$lte': new Date(endMonth)}})
       // .populate('products')
       .then(expenses => {
+        // for (let expense of expenses) {
+        //   for (let productId of expense.products) {
+        //     let promise = Product.findById(productId)
+        //     promises.push(promise)
+        //   }
+        // }
+
+        // Promise.all(promises)
+        //                .then(data => {
+        //                  for (let product of data) {
+        //                    totalExpenseSum += Number(product.price)
+        //                  }
+
+        //                  res.render('expenses/thisMonthExpenses', {
+        //                    expenses: expenses,
+        //                    totalExpenseSum: totalExpenseSum,
+        //                    startDate: startDate,
+        //                    endMonth: endMonth
+        //                  })
+        //                })
+
         for (let expense of expenses) {
-          for (let productId of expense.products) {
-            let promise = Product.findById(productId)
-            promises.push(promise)
-          }
-          // Expense
-          //     .findOne(expense._id)
-          //     .populate('products')
-          //     .then(result => {
-          //       totalExpenseSum += Number(result.price)
-          //     })
+          totalExpenseSum += Number(expense.totalDayExpense)
         }
 
-        Promise.all(promises)
-                       .then(data => {
-                        //  console.log(data)
-                         for (let product of data) {
-                          //  console.log(product.price)
-                           totalExpenseSum += Number(product.price)
-                         }
-
-                        //  console.log(totalExpenseSum)
-
-                         res.render('expenses/thisMonthExpenses', {
-                           expenses: expenses,
-                           totalExpenseSum: totalExpenseSum,
-                           startDate: startDate,
-                           endMonth: endMonth
-                         })
-                       })
+        res.render('expenses/thisMonthExpenses', {
+          expenses: expenses,
+          totalExpenseSum: totalExpenseSum,
+          startDate: startDate,
+          endMonth: endMonth
+        })
       })
         // expenses.products.forEach(product => {
         //   totalExpenseSum += Number(product.price)
