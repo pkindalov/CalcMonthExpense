@@ -281,6 +281,26 @@ module.exports = {
         expense.save()
         res.redirect('/editExpense?id=' + expenseId)
       })
+  },
+
+  deleteExpenseByIdGET: (req, res) => {
+    let expenseId = req.query.id
+
+    Expense
+      .findByIdAndRemove(expenseId)
+      .populate('products')
+      .then(deletedExpense => {
+        // console.log(deletedExpense.products)
+        for (let product of deletedExpense.products) {
+          let posOfExpenseId = product.expenses.indexOf(expenseId)
+          if (posOfExpenseId > -1) {
+            product.expenses.splice(posOfExpenseId, 1)
+            product.save()
+          }
+        }
+      })
+
+    res.redirect('/seeAllExpenses')
   }
 
 }
