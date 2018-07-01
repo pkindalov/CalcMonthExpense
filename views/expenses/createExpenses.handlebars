@@ -10,12 +10,18 @@
              {{/if}}
         </p>
 
+        <p>
+            {{#if expenseExists}}
+                <h3>{{errorDescription}}</h3>
+            {{/if}}
+        </p>
+
         <form method="POST" action="/createExpense">
              
              <div class="form-group">
                   <label for="date">Choose date for expense:</label>
                 <div class='input-group date'>
-                    <input class="form-control" name="date" /><br />
+                    <input class="form-control" name="date" value={{todayDate}} /><br />
                  
                 </div>
             </div>

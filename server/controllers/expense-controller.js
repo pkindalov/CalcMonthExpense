@@ -5,6 +5,7 @@ const dateHelpers = require('../utilities/dateHelpers')
 module.exports = {
   createExpenseGET: (req, res) => {
     let currentUser = req.user.id
+    let todayDate = dateHelpers.getTodayDateWithoutTime(new Date())
 
     Product
       .find({'author': currentUser})
@@ -12,7 +13,8 @@ module.exports = {
         res.render('expenses/createExpenses', {
           products: products,
           availableProducts: products.length > 0,
-          noAvailable: products.length === 0
+          noAvailable: products.length === 0,
+          todayDate: todayDate
         })
       })
   },
@@ -25,24 +27,42 @@ module.exports = {
     let needed = (reqBody.needed === 'true')
     let authorOfExpense = req.user.id
     let expenseProduct = reqBody.product
+    let expenseExists = false
+    let todayDate = dateHelpers.getTodayDateWithoutTime(new Date())
 
     Expense
-      .create({
-        user: authorOfExpense,
-        date: convertedDate,
-        products: expenseProduct,
-        description: expenseDescription,
-        isItAbsolutelyNeeded: needed
-      })
-      .then(expense => {
-        Product
-            .findById(expenseProduct)
-            .then(product => {
-              product.expenses.push(expense._id)
-              product.save()
+      .find({'date': convertedDate})
+      .then(foundExpense => {
+        if (foundExpense.length > 0) {
+          expenseExists = true
+          res.render('expenses/createExpenses', {
+            expenseExists: expenseExists,
+            errorDescription: 'You have created expense note for this date.  You can edit the old one, or delete current for creating new',
+            todayDate: todayDate
 
-              res.redirect('/')
+          })
+        } else {
+          Expense
+            .create({
+              user: authorOfExpense,
+              date: convertedDate,
+              products: expenseProduct,
+              description: expenseDescription,
+              isItAbsolutelyNeeded: needed,
+              todayDate: todayDate
+
             })
+            .then(expense => {
+              Product
+                  .findById(expenseProduct)
+                  .then(product => {
+                    product.expenses.push(expense._id)
+                    product.save()
+
+                    res.redirect('/')
+                  })
+            })
+        }
       })
   },
 
