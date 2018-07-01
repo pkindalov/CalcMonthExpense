@@ -25,6 +25,32 @@ module.exports = {
         )
   },
 
+  addProductToExpense: (req, res) => {
+    let reqBody = req.body
+    let productId = reqBody.product
+    let expenseId = req.query.id
+    let url = '/expenseDetails?id=' + expenseId
+
+    Product
+    .findById(productId)
+    .then(product => {
+      Expense
+      .findById(expenseId)
+      .then(expense => {
+        product.expenses.push(expense._id)
+        product.save()
+        expense.products.push(productId)
+
+        let dayExpense = Number(expense.totalDayExpense)
+        dayExpense += Number(product.price)
+        expense.totalDayExpense = '' + dayExpense
+        expense.save()
+      })
+    })
+
+    res.redirect(url)
+  },
+
   removeProductFromExpense: (req, res) => {
     let expenseId = req.query.id
     let reqBody = req.body
@@ -38,7 +64,7 @@ module.exports = {
         if (productPos > -1) {
           expense.products.splice(productPos, 1)
         }
-        expense.save()
+        // expense.save()
 
         Product
           .findById(productId)
@@ -48,6 +74,16 @@ module.exports = {
               product.expenses.splice(pos, 1)
               product.save()
             }
+
+            let totalDayExpense = Number(expense.totalDayExpense)
+            totalDayExpense -= Number(product.price)
+
+            if (totalDayExpense < 0) {
+              totalDayExpense = 0
+            }
+
+            expense.totalDayExpense = '' + totalDayExpense
+            expense.save()
           })
       })
     res.redirect(url)

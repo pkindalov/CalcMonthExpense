@@ -42,25 +42,30 @@ module.exports = {
 
           })
         } else {
-          Expense
-            .create({
-              user: authorOfExpense,
-              date: convertedDate,
-              products: expenseProduct,
-              description: expenseDescription,
-              isItAbsolutelyNeeded: needed,
-              todayDate: todayDate
+          Product
+            .findById(expenseProduct)
+            .then(firstProduct => {
+              Expense
+                .create({
+                  user: authorOfExpense,
+                  date: convertedDate,
+                  products: expenseProduct,
+                  description: expenseDescription,
+                  isItAbsolutelyNeeded: needed,
+                  todayDate: todayDate,
+                  totalDayExpense: firstProduct.price
 
-            })
-            .then(expense => {
-              Product
-                  .findById(expenseProduct)
-                  .then(product => {
-                    product.expenses.push(expense._id)
-                    product.save()
+                })
+                .then(expense => {
+                  Product
+                      .findById(expenseProduct)
+                      .then(product => {
+                        product.expenses.push(expense._id)
+                        product.save()
 
-                    res.redirect('/')
-                  })
+                        res.redirect('/')
+                      })
+                })
             })
         }
       })
@@ -144,7 +149,7 @@ module.exports = {
   expenseDetailsById: (req, res) => {
     let expenseId = req.query.id
     let userId = req.user.id
-    let expenseSumForAllProducts = 0
+    // let expenseSumForAllProducts = 0
 
     Expense
     .findById(expenseId)
@@ -156,16 +161,16 @@ module.exports = {
           .then(products => {
             // console.log(products)
 
-            expense.products.forEach(product => {
-              let expense = Number(product.price)
-              expenseSumForAllProducts += expense
-            })
+            // expense.products.forEach(product => {
+            //   let expense = Number(product.price)
+            //   expenseSumForAllProducts += expense
+            // })
 
             res.render('expenses/expenseDetails', {
               expense: expense,
               products: products,
-              availableProducts: products.length > 0,
-              totalExpense: expenseSumForAllProducts
+              availableProducts: products.length > 0
+              // totalExpense: expenseSumForAllProducts
             })
           })
     })
@@ -188,29 +193,6 @@ module.exports = {
           nextPage: page + 1
         })
       })
-  },
-
-  addProductToExpense: (req, res) => {
-    let reqBody = req.body
-    let productId = reqBody.product
-    let expenseId = req.query.id
-    let url = '/expenseDetails?id=' + expenseId
-
-    Expense
-      .findById(expenseId)
-      .then(expense => {
-        expense.products.push(productId)
-        expense.save()
-
-        Product
-          .findById(productId)
-          .then(product => {
-            product.expenses.push(expense._id)
-            product.save()
-          })
-      })
-
-    res.redirect(url)
   },
 
   thisMonthExpenses: (req, res) => {
