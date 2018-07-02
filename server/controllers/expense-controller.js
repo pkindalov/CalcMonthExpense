@@ -179,12 +179,18 @@ module.exports = {
   seeAllExpenses: (req, res) => {
     let page = parseInt(req.query.page) || 1
     let pageSize = 10
+    let formattedDate = ''
 
     Expense
       .find({})
       .skip((page - 1) * pageSize)
       .limit(pageSize)
       .then(expenses => {
+        for (let expense of expenses) {
+          formattedDate = dateHelpers.getTodayDateWithoutTime(expense.date)
+          expense.formattedDate = formattedDate
+        }
+
         res.render('expenses/seeAllExpenses', {
           expenses: expenses,
           hasPrevPage: page > 1,
@@ -290,12 +296,12 @@ module.exports = {
     let expenseId = req.query.id
 
     Expense
-      .findByIdAndRemove(expenseId)
+      .findById(expenseId)
       .populate('products')
       .then(deletedExpense => {
-        // console.log(deletedExpense.products)
         for (let product of deletedExpense.products) {
           let posOfExpenseId = product.expenses.indexOf(expenseId)
+
           if (posOfExpenseId > -1) {
             product.expenses.splice(posOfExpenseId, 1)
             product.save()
@@ -303,7 +309,11 @@ module.exports = {
         }
       })
 
-    res.redirect('/seeAllExpenses')
+    Expense
+        .findByIdAndRemove(expenseId)
+        .then(delExpense => {
+          res.redirect('/seeAllExpenses')
+        })
   }
 
 }
