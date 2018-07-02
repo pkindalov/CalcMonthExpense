@@ -32,6 +32,7 @@ module.exports = (app) => {
   app.get('/editExpense', auth.isAuthenticated, controllers.expenses.editExpenseByIdGET)
   app.post('/editExpense', auth.isAuthenticated, controllers.expenses.editExpenseByIdPOST)
   app.get('/deleteExpense', auth.isAuthenticated, controllers.expenses.deleteExpenseByIdGET)
+  app.get('/findExpByKeyword', auth.isAuthenticated, controllers.expenses.searchExpenseByKeyword)
 
   app.all('*', (req, res) => {
     res.status(404)

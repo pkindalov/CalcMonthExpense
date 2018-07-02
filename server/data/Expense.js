@@ -12,6 +12,7 @@ let expenseSchema = new mongoose.Schema({
   totalDayExpense: {type: String, required: REQUIRED_VALIDATION_MESSAGE}
 })
 
+expenseSchema.index({'$**': 'text'})
 let Expense = mongoose.model('Expense', expenseSchema)
 
 module.exports = Expense
