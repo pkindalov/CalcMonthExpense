@@ -7,7 +7,20 @@
 
          {{#if todayExpense}}   
               <h3>You have expense for <a href="/expenseDetails?id={{todayExpense._id}}">today.</a></h3>
+              <hr />
         {{/if}}
+
+           <form method="GET" action="/findExpByKeyword">
+              <div class="form-group">
+                <div class='input-group'>
+                     <label for="keyword">Search by keyword:</label>
+                    <input class="form-control" name="keyword" /><br /><br /><br />
+                    <button class="btn btn-success" type="submit">Run Forest.. Run.</button>
+                </div>
+            </div>
+            </form>
+
+
 
         <hr />
 
@@ -24,10 +37,8 @@
                     <input class="form-control" name="dateFrom" /><br />
                  
                 </div>
-
-           
-
             </div>
+            
 
                <div class='input-group date'>
                      <label for="dateTo">Select end of period:</label>

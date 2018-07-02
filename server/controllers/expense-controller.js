@@ -368,6 +368,57 @@ module.exports = {
         .then(delExpense => {
           res.redirect('/seeAllExpenses')
         })
+  },
+
+  searchExpenseByKeyword: (req, res) => {
+    let keyword = req.query.keyword
+    let formattedDate = ''
+    let page = parseInt(req.query.page) || 1
+    let pageSize = 15
+    let sortAsc = req.query.sortAsc
+
+    if (sortAsc) {
+      Expense
+      .find({$text: {$search: keyword}})
+      .skip((page - 1) * pageSize)
+      .limit(pageSize)
+      .then(expenses => {
+        expenses.forEach(expense => {
+          formattedDate = dateHelpers.getTodayDateWithoutTime(expense.date)
+          expense.formattedDate = formattedDate
+        })
+
+        res.render('expenses/searchExpenseByKeyword', {
+          expenses: expenses,
+          keyword: keyword,
+          hasPrevPage: page > 1,
+          hasNextPage: expenses.length > 0,
+          prevPage: page - 1,
+          nextPage: page + 1
+        })
+      })
+    } else {
+      Expense
+        .find({$text: {$search: keyword}})
+        .sort('-date')
+        .skip((page - 1) * pageSize)
+        .limit(pageSize)
+        .then(expenses => {
+          expenses.forEach(expense => {
+            formattedDate = dateHelpers.getTodayDateWithoutTime(expense.date)
+            expense.formattedDate = formattedDate
+          })
+
+          res.render('expenses/searchExpenseByKeyword', {
+            expenses: expenses,
+            keyword: keyword,
+            hasPrevPage: page > 1,
+            hasNextPage: expenses.length > 0,
+            prevPage: page - 1,
+            nextPage: page + 1
+          })
+        })
+    }
   }
 
 }
