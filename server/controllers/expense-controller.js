@@ -106,13 +106,22 @@ module.exports = {
     let dateFrom = new Date(req.query.dateFrom)
     let page = parseInt(req.query.page) || 1
     let pageSize = 10
+    let formattedDate = ''
+    let sortAsc = req.query.sortAsc
     // console.log(dateTo)
 
-    Expense
+    if (sortAsc) {
+      Expense
       .find({'date': {'$gte': dateFrom, '$lte': dateTo}})
+      .sort('date')
       .skip((page - 1) * pageSize)
       .limit(pageSize)
       .then(expenses => {
+        expenses.forEach(expense => {
+          formattedDate = dateHelpers.getTodayDateWithoutTime(expense.date)
+          expense.formattedDate = formattedDate
+        })
+
         res.render('expenses/listExpenses', {
           expenses: expenses,
           dateTo: req.query.dateTo,
@@ -123,6 +132,28 @@ module.exports = {
           nextPage: page + 1
         })
       })
+    } else {
+      Expense
+        .find({'date': {'$gte': dateFrom, '$lte': dateTo}})
+        .skip((page - 1) * pageSize)
+        .limit(pageSize)
+        .then(expenses => {
+          expenses.forEach(expense => {
+            formattedDate = dateHelpers.getTodayDateWithoutTime(expense.date)
+            expense.formattedDate = formattedDate
+          })
+
+          res.render('expenses/listExpenses', {
+            expenses: expenses,
+            dateTo: req.query.dateTo,
+            dateFrom: req.query.dateFrom,
+            hasPrevPage: page > 1,
+            hasNextPage: expenses.length > 0,
+            prevPage: page - 1,
+            nextPage: page + 1
+          })
+        })
+    }
   },
 
   getExpenseOnDate: (req, res) => {
@@ -180,9 +211,12 @@ module.exports = {
     let page = parseInt(req.query.page) || 1
     let pageSize = 10
     let formattedDate = ''
+    let sortAsc = req.query.sortAsc
 
-    Expense
+    if (sortAsc) {
+      Expense
       .find({})
+      .sort('date')
       .skip((page - 1) * pageSize)
       .limit(pageSize)
       .then(expenses => {
@@ -199,6 +233,26 @@ module.exports = {
           nextPage: page + 1
         })
       })
+    } else {
+      Expense
+        .find({})
+        .skip((page - 1) * pageSize)
+        .limit(pageSize)
+        .then(expenses => {
+          for (let expense of expenses) {
+            formattedDate = dateHelpers.getTodayDateWithoutTime(expense.date)
+            expense.formattedDate = formattedDate
+          }
+
+          res.render('expenses/seeAllExpenses', {
+            expenses: expenses,
+            hasPrevPage: page > 1,
+            hasNextPage: expenses.length > 0,
+            prevPage: page - 1,
+            nextPage: page + 1
+          })
+        })
+    }
   },
 
   thisMonthExpenses: (req, res) => {
