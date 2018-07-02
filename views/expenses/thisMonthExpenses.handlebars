@@ -3,7 +3,12 @@
     <div class="row">
         <div class="col-lg-12">
             <h3>This month you have total 
+                {{#if expenses}}
                 <strong><a href="/searchExpenses?dateFrom={{startDate}}&dateTo={{endMonth}}">{{expenses.length}}</a></strong> expenses
+
+                {{else}}
+                    <strong>{{expenses.length}}</strong>
+                {{/if}}
                 </h3>
             <h3>Total Money Given <strong>{{totalExpenseSum}}</strong></h3>
             <hr />

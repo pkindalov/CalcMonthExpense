@@ -1,22 +1,34 @@
 <div class="container-fluid">
 
-{{#each expenses}}
-<div class="row">
-    <div class="col-lg-6">
-        <p>
-            Expense for <a class="btn btn-primary" href="/expenseDetails?id={{this._id}}">{{formattedDate}}</a>
-            <a class="btn btn-success" href="/editExpense?id={{this._id}}">Edit</a>
-            <a class="btn btn-danger" href="/deleteExpense?id={{this._id}}">Delete</a>
-        </p>
+{{#if expenses}}
+
+    {{#each expenses}}
+    <div class="row">
+        <div class="col-lg-6">
+            <p>
+                Expense for <a class="btn btn-primary" href="/expenseDetails?id={{this._id}}">{{formattedDate}}</a>
+                <a class="btn btn-success" href="/editExpense?id={{this._id}}">Edit</a>
+                <a class="btn btn-danger" href="/deleteExpense?id={{this._id}}">Delete</a>
+            </p>
+        </div>
     </div>
-</div>
-{{/each}}
+    {{/each}}
 
-{{#if hasPrevPage}}
-    <a href="/seeAllExpenses?page={{prevPage}}">Prev</a>
-{{/if}}    
+    {{#if hasPrevPage}}
+        <a href="/seeAllExpenses?page={{prevPage}}">Prev</a> |
+    {{/if}}    
 
-{{#if hasNextPage}}
-       <a href="/seeAllExpenses?page={{nextPage}}">Next</a>
+    {{#if hasNextPage}}
+        <a href="/seeAllExpenses?page={{nextPage}}">Next</a> |
+    {{/if}}
+
+    <a href="/seeAllExpenses?sortAsc=true">Sort Ascending</a>   
+
+{{else}}
+
+    <h3>Sorry, no results found</h3>
+
 {{/if}}
+
+
 </div>
