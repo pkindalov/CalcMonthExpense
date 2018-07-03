@@ -1,5 +1,6 @@
 const Product = require('../data/Product')
 const Expense = require('../data/Expense')
+const User = require('../data/User')
 
 module.exports = {
   createProductGET: (req, res) => {
@@ -20,9 +21,21 @@ module.exports = {
           name: productName,
           price: productPrice,
           photo: productPhoto
-        }).then(
-            res.redirect('/')
-        )
+        }).then(createdProduct => {
+          User
+              .findById(productAuthor)
+              .then(productAuthor => {
+                let ifThisProductExists = productAuthor.products.indexOf(createdProduct._id)
+
+                if (ifThisProductExists < 0) {
+                  productAuthor.products.push(createdProduct._id)
+                  productAuthor.save()
+                } else {
+                  res.locals.globalError = 'This product already exists'
+                }
+                res.redirect('/')
+              })
+        })
   },
 
   addProductToExpense: (req, res) => {
@@ -135,6 +148,7 @@ module.exports = {
 
   deleteProductByIdGET: (req, res) => {
     let productId = req.query.product
+    let user = req.user.id
 
     Product
       .findByIdAndRemove(productId)
@@ -150,6 +164,18 @@ module.exports = {
             expense.save()
           }
         }
+
+        User
+          .findById(user)
+          .then(user => {
+            let productPos = user.products.indexOf(deletedProduct._id)
+            if (productPos > -1) {
+              user.products.splice(productPos, 1)
+              user.save()
+            } else {
+              res.locals.globalError = 'Not found such product..'
+            }
+          })
       })
 
     res.redirect('/')

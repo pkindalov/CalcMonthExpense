@@ -11,6 +11,8 @@ module.exports = (app) => {
   app.post('/users/login', controllers.users.loginPost)
   app.post('/users/logout', controllers.users.logout)
   app.get('/users', auth.isAuthenticated, controllers.users.getUserProfile)
+  app.get('/settings', auth.isAuthenticated, controllers.users.userSettingsGET)
+  app.get('/permRemoveAccount', auth.isAuthenticated, controllers.users.permRemUserAccount)
 
   app.get('/createProduct', auth.isAuthenticated, controllers.products.createProductGET)
   app.post('/createProduct', auth.isAuthenticated, controllers.products.createProductPOST)

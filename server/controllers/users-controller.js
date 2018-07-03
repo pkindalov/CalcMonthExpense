@@ -1,6 +1,7 @@
 const encryption = require('../utilities/encryption')
 const User = require('mongoose').model('User')
 const Expense = require('../data/Expense')
+const Product = require('../data/Product')
 const dateHelpers = require('../utilities/dateHelpers')
 // const errorHandler = require('../utilities/error-handler')
 
@@ -73,6 +74,7 @@ module.exports = {
 
   getUserProfile: (req, res) => {
     let userId = req.query.profile
+    let formattedDate = ''
 
     Expense
       .find({'user': userId})
@@ -81,7 +83,11 @@ module.exports = {
       .then(expenses => {
         let today = dateHelpers.getTodayDateWithoutTime(new Date())
         today = new Date(today)
-        // console.log(today)
+
+        expenses.forEach(expense => {
+          formattedDate = dateHelpers.getTodayDateWithoutTime(expense.date)
+          expense.formattedDate = formattedDate
+        })
 
         Expense
           .findOne({'user': userId, 'date': today})
@@ -90,9 +96,38 @@ module.exports = {
 
             res.render('users/profile', {
               expenses: expenses,
-              todayExpense: todayExpense
+              todayExpense: todayExpense,
+              formattedDate: formattedDate
             })
           })
       })
+  },
+
+  userSettingsGET: (req, res) => {
+    res.render('users/settings')
+  },
+
+  permRemUserAccount: (req, res) => {
+    let user = req.user.id
+
+    User
+      .findByIdAndRemove(user)
+      .then(user => {
+        for (let product of user.products) {
+          Product
+              .findByIdAndRemove(product)
+              .then(deletedProduct => {
+                for (let expense of user.expenses) {
+                  Expense
+                      .findByIdAndRemove(expense)
+                      .then(
+
+                      )
+                }
+              })
+        }
+      })
+
+    res.redirect('/')
   }
 }

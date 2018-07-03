@@ -1,5 +1,6 @@
 const Expense = require('../data/Expense')
 const Product = require('../data/Product')
+const User = require('../data/User')
 const dateHelpers = require('../utilities/dateHelpers')
 
 module.exports = {
@@ -62,6 +63,19 @@ module.exports = {
                       .then(product => {
                         product.expenses.push(expense._id)
                         product.save()
+
+                        User
+                          .findById(authorOfExpense)
+                          .then(user => {
+                            let ifThisExpensetExists = user.expenses.indexOf(expense._id)
+
+                            if (ifThisExpensetExists < 0) {
+                              user.expenses.push(expense._id)
+                              user.save()
+                            } else {
+                              res.locals.globalError = 'This product already exists'
+                            }
+                          })
 
                         res.redirect('/')
                       })
@@ -348,6 +362,7 @@ module.exports = {
 
   deleteExpenseByIdGET: (req, res) => {
     let expenseId = req.query.id
+    let user = req.user.id
 
     Expense
       .findById(expenseId)
@@ -361,6 +376,18 @@ module.exports = {
             product.save()
           }
         }
+
+        User
+        .findById(user)
+        .then(user => {
+          let expensePos = user.expenses.indexOf(deletedExpense._id)
+          if (expensePos > -1) {
+            user.expenses.splice(expensePos, 1)
+            user.save()
+          } else {
+            res.locals.globalError = 'Not found such expense..'
+          }
+        })
       })
 
     Expense
