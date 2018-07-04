@@ -36,6 +36,9 @@ module.exports = (app) => {
   app.get('/deleteExpense', auth.isAuthenticated, controllers.expenses.deleteExpenseByIdGET)
   app.get('/findExpByKeyword', auth.isAuthenticated, controllers.expenses.searchExpenseByKeyword)
 
+  app.get('/createCategory', auth.isAuthenticated, controllers.categories.createCategoryGET)
+  app.post('/createCategory', auth.isAuthenticated, controllers.categories.createCategoryPOST)
+
   app.all('*', (req, res) => {
     res.status(404)
     res.send('404 Not found')

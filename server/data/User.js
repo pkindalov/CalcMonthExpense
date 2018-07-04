@@ -12,7 +12,8 @@ let userSchema = new mongoose.Schema({
   hashedPass: String,
   roles: [String],
   expenses: [{type: ObjectId, ref: 'Expense'}],
-  products: [{type: ObjectId, ref: 'Product'}]
+  products: [{type: ObjectId, ref: 'Product'}],
+  categories: [{type: ObjectId, ref: 'Category'}]
 })
 
 userSchema.method({
@@ -53,7 +54,8 @@ module.exports.seedAdminUser = () => {
       hashedPass: hashedPass,
       roles: ['Admin'],
       expenses: [],
-      products: []
+      products: [],
+      categories: []
     })
   })
 }

@@ -3,6 +3,7 @@ const User = require('../data/User')
 
 require('../data/Product')
 require('../data/Expense')
+require('../data/Category')
 
 mongoose.Promise = global.Promise
 

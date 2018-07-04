@@ -50,6 +50,29 @@
 
 
              {{/if}}
+
+             <h3>{{errorDescription}}</h3>
+             {{#if availableCategories}}
+                   <div class="form-group">
+                <label for="category">Select category of expense:</label>
+                <select  class="form-control"  name="category" aria-describedby="category" placeholder="type of expense">
+                   {{#each categories}}
+                        <option value={{this._id}}>{{this.name}}</option>
+                   {{/each}}
+                </select>
+                <small id="category" class="form-text text-muted">Choose type of expense <a href="/createCategory">create a category</a></small>
+             </div>
+
+             {{else}}
+                <div class="form-group">
+                <label for="product">Select category of expense</label>
+                <select  class="form-control"  name="category" aria-describedby="category" placeholder="type of expense">
+                   <option value="noavailable">You must create a category  from a link below</option>
+                </select>
+                <small id="category" class="form-text text-muted">Choose type of expense <a href="/createCategory">create a category</a></small>
+             </div>
+
+             {{/if}}
             
 
                <div class="form-group">

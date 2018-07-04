@@ -1,6 +1,7 @@
 const Expense = require('../data/Expense')
 const Product = require('../data/Product')
 const User = require('../data/User')
+const Category = require('../data/Category')
 const dateHelpers = require('../utilities/dateHelpers')
 
 module.exports = {
@@ -11,12 +12,18 @@ module.exports = {
     Product
       .find({'author': currentUser})
       .then(products => {
-        res.render('expenses/createExpenses', {
-          products: products,
-          availableProducts: products.length > 0,
-          noAvailable: products.length === 0,
-          todayDate: todayDate
-        })
+        Category
+          .find({'author': currentUser})
+          .then(categories => {
+            res.render('expenses/createExpenses', {
+              products: products,
+              availableProducts: products.length > 0,
+              availableCategories: categories.length > 0,
+              categories: categories,
+              noAvailable: products.length === 0,
+              todayDate: todayDate
+            })
+          })
       })
   },
 
@@ -30,6 +37,7 @@ module.exports = {
     let expenseProduct = reqBody.product
     let expenseExists = false
     let todayDate = dateHelpers.getTodayDateWithoutTime(new Date())
+    let category = reqBody.category
 
     Expense
       .find({'date': convertedDate})
@@ -43,42 +51,79 @@ module.exports = {
 
           })
         } else {
-          Product
-            .findById(expenseProduct)
-            .then(firstProduct => {
-              Expense
-                .create({
-                  user: authorOfExpense,
-                  date: convertedDate,
-                  products: expenseProduct,
-                  description: expenseDescription,
-                  isItAbsolutelyNeeded: needed,
-                  todayDate: todayDate,
-                  totalDayExpense: firstProduct.price
+          // if (category === 'noavailable') {
+          //   res.render('expenses/createExpenses', {
+          //     expenseExists: expenseExists,
+          //     errorDescription: 'You must create a category. Just follow the link bellow',
+          //     todayDate: todayDate
 
+          //   })
+
+          //   return
+          // }
+
+          Category
+            .find({'author': authorOfExpense})
+            .then(categories => {
+              if (categories.length === 0) {
+                res.render('expenses/createExpenses', {
+                  expenseExists: expenseExists,
+                  errorDescription: 'You must create a category. Just follow the link bellow',
+                  todayDate: todayDate
                 })
-                .then(expense => {
-                  Product
-                      .findById(expenseProduct)
-                      .then(product => {
-                        product.expenses.push(expense._id)
-                        product.save()
 
-                        User
-                          .findById(authorOfExpense)
-                          .then(user => {
-                            let ifThisExpensetExists = user.expenses.indexOf(expense._id)
+                return
+              }
 
-                            if (ifThisExpensetExists < 0) {
-                              user.expenses.push(expense._id)
-                              user.save()
-                            } else {
-                              res.locals.globalError = 'This product already exists'
-                            }
+              Product
+                .findById(expenseProduct)
+                .then(firstProduct => {
+                  Expense
+                    .create({
+                      user: authorOfExpense,
+                      date: convertedDate,
+                      products: expenseProduct,
+                      description: expenseDescription,
+                      isItAbsolutelyNeeded: needed,
+                      todayDate: todayDate,
+                      totalDayExpense: firstProduct.price
+
+                    })
+                    .then(expense => {
+                      Product
+                          .findById(expenseProduct)
+                          .then(product => {
+                            product.expenses.push(expense._id)
+                            product.save()
+
+                            User
+                              .findById(authorOfExpense)
+                              .then(user => {
+                                let ifThisExpensetExists = user.expenses.indexOf(expense._id)
+
+                                if (ifThisExpensetExists < 0) {
+                                  user.expenses.push(expense._id)
+                                  user.save()
+                                } else {
+                                  res.locals.globalError = 'This product already exists'
+                                }
+
+                                Category
+                                    .findById(category)
+                                    .then(category => {
+                                      category.expenses.push(expense._id)
+                                      category.save()
+                                      let checkCategoryExists = expense.categories.indexOf(category._id)
+                                      if (checkCategoryExists < 0) {
+                                        expense.categories.push(category._id)
+                                        expense.save()
+                                      }
+                                    })
+                              })
+
+                            res.redirect('/')
                           })
-
-                        res.redirect('/')
-                      })
+                    })
                 })
             })
         }
@@ -367,6 +412,7 @@ module.exports = {
     Expense
       .findById(expenseId)
       .populate('products')
+      .populate('categories')
       .then(deletedExpense => {
         for (let product of deletedExpense.products) {
           let posOfExpenseId = product.expenses.indexOf(expenseId)
@@ -375,6 +421,18 @@ module.exports = {
             product.expenses.splice(posOfExpenseId, 1)
             product.save()
           }
+        }
+
+        for (let category of deletedExpense.categories) {
+          Category
+            .findById(category._id)
+            .then(category => {
+              let elPosToRemove = category.expenses.indexOf(expenseId)
+              if (elPosToRemove > -1) {
+                category.expenses.splice(elPosToRemove, 1)
+                category.save()
+              }
+            })
         }
 
         User
