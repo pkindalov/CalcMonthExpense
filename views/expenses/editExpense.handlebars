@@ -23,14 +23,19 @@
        
 
              <div class="form-group">
-                <label for="product">Select product which you buy:</label>
-                <p>You can edit products for this expense from <a class="btn btn-primary" href="/editProductsForExpense?id={{expense._id}}">here</a></p>
+                <label for="product">You can change products for this expense from:</label>
+                <p>You can change products for this expense from <a class="btn btn-primary" href="/editProductsForExpense?id={{expense._id}}">here</a></p>
                 {{!-- <select  class="form-control"  name="product" aria-describedby="productNeededHelp" placeholder="product which you buy">
                    {{#each expense.products}}
                         <option value={{this._id}}>{{this.name}}</option>
                    {{/each}}
                 </select>
                 <small id="productProductHelp" class="form-text text-muted">Choose product which you buy. If is it empty just <a href="/createProduct">create a product</a></small> --}}
+             </div>
+
+                <div class="form-group">
+                <label for="category">You can change categories for this expense from:</label>
+                <p>You can edit products for this expense from <a class="btn btn-primary" href="/editCategoryForExpense?id={{expense._id}}">here</a></p>
              </div>
 
           

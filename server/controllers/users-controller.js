@@ -1,6 +1,7 @@
 const encryption = require('../utilities/encryption')
 const User = require('mongoose').model('User')
 const Expense = require('../data/Expense')
+const Category = require('../data/Category')
 const Product = require('../data/Product')
 const dateHelpers = require('../utilities/dateHelpers')
 // const errorHandler = require('../utilities/error-handler')
@@ -125,6 +126,12 @@ module.exports = {
                       )
                 }
               })
+        }
+
+        for (let category of user.categories) {
+          Category
+            .findByIdAndRemove(category)
+            .then()
         }
       })
 
