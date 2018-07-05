@@ -381,7 +381,9 @@ module.exports = {
 
         res.render('expenses/editExpense', {
           expense: expense,
-          dateFormatted: dateFormatted
+          dateFormatted: dateFormatted,
+          availableProducts: expense.products.length > 0,
+          products: expense.products
         })
       })
   },

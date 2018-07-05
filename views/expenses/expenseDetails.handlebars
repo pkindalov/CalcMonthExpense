@@ -1,42 +1,3 @@
-<script
-			  src="https://code.jquery.com/jquery-3.3.1.js"
-			  integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
-			  crossorigin="anonymous"></script>
-		
-
-<script>
-    $(document).ready(function(){
-
-        $('.addProductContainer').hide()
-        $('.removeProductContainer').hide()
-        
-        let turnedOn = false
-        let removeProductButtonTurnedOn = false
-
-        $('a[name="addProduct"]').on('click', function(){
-           
-             turnedOn = !turnedOn
-             if(turnedOn){
-                 $('.addProductContainer').show()
-             }else{
-                  $('.addProductContainer').hide()
-             }
-        })
-
-
-
-       $('a[name="removeProduct"]').on('click', function(){
-           
-             removeProductButtonTurnedOn = !removeProductButtonTurnedOn
-             if(removeProductButtonTurnedOn){
-                 $('.removeProductContainer').show()
-             }else{
-                  $('.removeProductContainer').hide()
-             }
-        })
-
-    })
-</script>
 
 
 <div class="container">
@@ -61,6 +22,7 @@
             <p><strong>Total Money Spent For Products Today: {{expense.totalDayExpense}} lv</strong></p>
             <p>
                 <a class="btn btn-primary" name="addProduct">Add Another Product</a>
+                 <a class="btn btn-danger" name="removeProduct">Remove Product</a>
             </p>
 
 
@@ -100,9 +62,7 @@
 
 
 
-           <p>
-                <a class="btn btn-danger" name="removeProduct">Remove Product</a>
-            </p>
+         
 
 
             <div class="removeProductContainer">
@@ -148,3 +108,12 @@
         {{/if}}
     </div>
 </div>
+
+
+<script
+			  src="https://code.jquery.com/jquery-3.3.1.js"
+			  integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+			  crossorigin="anonymous"></script>
+		
+
+<script src="./js/addRemoveElements.js"></script>
