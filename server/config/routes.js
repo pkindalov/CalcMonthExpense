@@ -38,6 +38,8 @@ module.exports = (app) => {
 
   app.get('/createCategory', auth.isAuthenticated, controllers.categories.createCategoryGET)
   app.post('/createCategory', auth.isAuthenticated, controllers.categories.createCategoryPOST)
+  app.post('/addCategoryToExpense', auth.isAuthenticated, controllers.categories.addCategoryToExpense)
+  app.post('/removeCategoryForExpense', auth.isAuthenticated, controllers.categories.removeCategoryFromExpense)
 
   app.all('*', (req, res) => {
     res.status(404)

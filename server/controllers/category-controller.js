@@ -1,5 +1,6 @@
 const Category = require('../data/Category')
 const User = require('../data/User')
+const Expense = require('../data/Expense')
 
 module.exports = {
   createCategoryGET: (req, res) => {
@@ -32,5 +33,46 @@ module.exports = {
 
           res.redirect('/createExpense')
         })
+  },
+
+  addCategoryToExpense: (req, res) => {
+    let expenseId = req.query.id
+    let reqBody = req.body
+    let categoryToAddID = reqBody.category
+    let url = '/expenseDetails?id=' + expenseId
+
+    Expense
+      .findById(expenseId)
+      .then(expense => {
+        let ifThisCategoryAlreadyAdded = expense.categories.indexOf(categoryToAddID)
+        if (ifThisCategoryAlreadyAdded < 0) {
+          expense.categories.push(categoryToAddID)
+          expense.save()
+          res.redirect(url)
+        } else {
+          // console.log('we are here')
+          let error = 'This category is already added to this expense'
+          res.render('home/index', {
+            globalError: error
+          })
+        }
+      })
+  },
+
+  removeCategoryFromExpense: (req, res) => {
+    let expenseId = req.query.id
+    let reqBody = req.body
+    let categoryForRemoving = reqBody.category
+    let url = '/expenseDetails?id=' + expenseId
+
+    Expense
+      .findById(expenseId)
+      .then(expense => {
+        let findPosCat = expense.categories.indexOf(categoryForRemoving)
+        expense.categories.splice(findPosCat, 1)
+        expense.save()
+      })
+
+    res.redirect(url)
   }
 }

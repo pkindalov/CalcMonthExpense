@@ -244,24 +244,31 @@ module.exports = {
     Expense
     .findById(expenseId)
     .populate('products')
+    .populate('categories')
     .then(expense => {
       Product
           .find({'author': userId})
           .populate('products')
           .then(products => {
-            // console.log(products)
+            // console.log(expense.categories)
 
             // expense.products.forEach(product => {
             //   let expense = Number(product.price)
             //   expenseSumForAllProducts += expense
             // })
 
-            res.render('expenses/expenseDetails', {
-              expense: expense,
-              products: products,
-              availableProducts: products.length > 0
-              // totalExpense: expenseSumForAllProducts
-            })
+            Category
+              .find({'author': userId})
+              .then(categories => {
+                res.render('expenses/expenseDetails', {
+                  expense: expense,
+                  products: products,
+                  availableProducts: products.length > 0,
+                  availableCategories: categories.length > 0,
+                  categories: categories
+                  // totalExpense: expenseSumForAllProducts
+                })
+              })
           })
     })
   },
