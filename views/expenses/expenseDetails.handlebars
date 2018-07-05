@@ -15,6 +15,12 @@
                 <hr /><br />
             {{/each}}
 
+            <h4>Expense Categories:</h4>
+            {{#each expense.categories}}
+                <p><a href="/showExpensesWithCategory{{this.name}}">{{this.name}}</a></p>
+                <p><img src={{this.picture}} alt='image of category {{this.name}} '/></p>
+            {{/each}}
+
             <p>Reason for buying this: {{expense.description}}</p>
             <p>Do you really need these products? {{expense.isItAbsolutelyNeeded}}</p>
 
@@ -25,7 +31,7 @@
                  <a class="btn btn-danger" name="removeProduct">Remove Product</a>
             </p>
 
-
+    
             <div class="addProductContainer">
                 <form method="POST" action="/addProductToExpense?id={{expense._id}}">
                     {{#if availableProducts}}
@@ -57,11 +63,6 @@
 
                 </form>
             </div>
-
-
-
-
-
          
 
 
@@ -90,6 +91,80 @@
                             
                             </select>
                             <small id="productNeededHelp" class="form-text text-muted">Choose product which you buy. If is it empty just <a href="/createProduct">create a product</a></small>
+                        </div>
+
+                    {{/if}}
+
+                </form>
+            </div>
+
+
+             <p><strong>Add/Remove Category</strong></p>
+            <p>
+                <a class="btn btn-primary" name="addCategory">Add Another Category</a>
+                 <a class="btn btn-danger" name="removeCategory">Remove Another Category</a>
+            </p>
+
+
+                <div class="addCategoryContainer">
+                <form method="POST" action="/addCategoryToExpense?id={{expense._id}}">
+                    {{#if availableCategories}}
+                     <div class="form-group">
+                        <label for="product">Select category:</label>
+                            <select  class="form-control"  name="category" aria-describedby="categoryNeededHelp" placeholder="category">
+                                {{#each categories}}
+                                         <option value={{this._id}}>{{this.name}}</option>
+                                {{/each}}
+                            </select>
+                            <small id="categoryNeededHelp" class="form-text text-muted">Choose category  from the list. If is it empty just <a href="/createCategory">create a category</a></small>
+                        </div>
+
+                        <button class="btn btn-success" type="submit">Add Category</button>
+
+                    {{else}}
+
+                             <div class="form-group">
+                        <label for="category">Select product:</label>
+                            <select  class="form-control"  name="category" aria-describedby="categoryNeededHelp" placeholder="category">
+                                
+                            <option value="noavailable">You must create a product from a link below</option>
+                            
+                            </select>
+                            <small id="categoryNeededHelp" class="form-text text-muted">Choose category  from the list. If is it empty just <a href="/createCategory">create a category</a></small>
+                        </div>
+
+                    {{/if}}
+
+                </form>
+            </div>
+         
+
+
+            <div class="removeCategoryContainer">
+                <form method="POST" action="/removeCategoryForExpense?id={{expense._id}}">
+                    {{#if availableCategories}}
+                     <div class="form-group">
+                        <label for="category">Select category for remove from this expense:</label>
+                            <select  class="form-control"  name="category" aria-describedby="categoryNeededHelp" placeholder="choose category for removing">
+                                {{#each categories}}
+                                         <option value={{this._id}}>{{this.name}}</option>
+                                {{/each}}
+                            </select>
+                            <small id="categoryNeededHelp" class="form-text text-muted">Choose category which you will remove from this expense. If is it empty just <a href="/createCategory">create a category</a></small>
+                        </div>
+
+                        <button class="btn btn-danger" type="submit">Remove Category</button>
+
+                    {{else}}
+
+                             <div class="form-group">
+                                     <label for="category">Select category for remove from this expense:</label>
+                                <select  class="form-control"  name="category" aria-describedby="categoryNeededHelp" placeholder="choose category for removing">
+                                    
+                                <option value="noavailable">You must create a category from a link below</option>
+                                
+                                </select>
+                                <small id="categoryNeededHelp" class="form-text text-muted">which you will remove from this expense.. If is it empty just <a href="/createCategory">create a category</a></small>
                         </div>
 
                     {{/if}}
