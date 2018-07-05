@@ -378,20 +378,28 @@ module.exports = {
 
   editExpenseByIdGET: (req, res) => {
     let expenseId = req.query.id
+    let userId = req.user.id
     let dateFormatted = ''
 
     Expense
       .findById(expenseId)
       .populate('products')
+      .populate('categories')
       .then(expense => {
         dateFormatted = dateHelpers.getTodayDateWithoutTime(expense.date)
 
-        res.render('expenses/editExpense', {
-          expense: expense,
-          dateFormatted: dateFormatted,
-          availableProducts: expense.products.length > 0,
-          products: expense.products
-        })
+        Category
+                .find({'author': userId})
+                .then(categories => {
+                  res.render('expenses/editExpense', {
+                    expense: expense,
+                    dateFormatted: dateFormatted,
+                    availableProducts: expense.products.length > 0,
+                    availableCategories: categories.length > 0,
+                    products: expense.products,
+                    categories: categories
+                  })
+                })
       })
   },
 
