@@ -5,6 +5,10 @@
  {{/if}}
 
     <h3>Yours last 5 days expenses</h3>
+
+ {{#if noAvailableExpenses}}
+    <p>Sorry.. no available expenses at the moment. You can create one from <a href="/createExpense">here</a></p>
+ {{/if}}    
 {{#each expenses}}
 <div class="row">
     <div class="col-lg-6">

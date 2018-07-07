@@ -4,7 +4,7 @@
     <div class="row">
         <div class="col-lg-12">
             {{#if expense}}
-            <h4>Expense maded on {{expense.date}}</h4>
+            <h4>Expense maded on {{expense.formattedDate}}</h4>
             <h4>Products buyed on this date</h4>
             <hr />
             
@@ -17,7 +17,7 @@
 
             <h4>Expense Categories:</h4>
             {{#each expense.categories}}
-                <p><a href="/showExpensesWithCategory{{this.name}}">{{this.name}}</a></p>
+                <p><a href="/showExpensesWithCategory?name={{this.name}}">{{this.name}}</a></p>
                 <p><img src={{this.picture}} alt='image of category {{this.name}} '/></p>
             {{/each}}
 
