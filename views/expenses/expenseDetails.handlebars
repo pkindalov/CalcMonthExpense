@@ -15,10 +15,19 @@
                 <hr /><br />
             {{/each}}
 
+            <hr />
+
             <h4>Expense Categories:</h4>
+            <p>
             {{#each expense.categories}}
-                <p><a href="/showExpensesWithCategory?name={{this.name}}">{{this.name}}</a></p>
-                <p><img src={{this.picture}} alt='image of category {{this.name}} '/></p>
+                <a class="btn btn-success" href="/showExpensesWithCategory?name={{this.name}}">{{this.name}}</a>
+                {{!-- <p><img src={{this.picture}} alt='image of category {{this.name}} '/></p> --}}
+            {{/each}}
+            </p>
+
+             {{#each expense.categories}}
+                <p><a class="btn btn-success" href="/showExpensesWithCategory?name={{this.name}}"><img src={{this.picture}} alt='image of category {{this.name}} '/></a></p>
+                {{!-- <p><img src={{this.picture}} alt='image of category {{this.name}} '/></p> --}}
             {{/each}}
 
             <p>Reason for buying this: {{expense.description}}</p>

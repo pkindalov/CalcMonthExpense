@@ -1,6 +1,7 @@
 const Category = require('../data/Category')
 const User = require('../data/User')
 const Expense = require('../data/Expense')
+const dateHelpers = require('../utilities/dateHelpers')
 
 module.exports = {
   createCategoryGET: (req, res) => {
@@ -160,12 +161,11 @@ module.exports = {
                 if (delCategoryPos > -1) {
                   expense.categories.splice(delCategoryPos, 1)
                   expense.save()
-
-                  res.redirect('/selectCategoryForEdit')
                 }
               })
           }
         })
+    res.redirect('/selectCategoryForEdit')
   },
 
   showExpensesByCategory: (req, res) => {
@@ -177,6 +177,12 @@ module.exports = {
       .populate('expenses')
       .then(categories => {
         // console.log(categories)
+        categories.forEach(category => {
+          category.expenses.forEach(expense => {
+            expense.formattedDate = dateHelpers.getTodayDateWithoutTime(expense.date)
+          })
+        })
+
         res.render('categories/listExpensesByCategoryName', {
           categories: categories
         })

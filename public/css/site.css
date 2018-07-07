@@ -19,3 +19,13 @@ h1{
 .menu li::after{
     content: '\00a0';
 }
+
+img{
+    width: 400px;
+    height: 200px;
+}
+
+.imgSize600x400px{
+    width: 600px;
+    height: 400px;
+}
