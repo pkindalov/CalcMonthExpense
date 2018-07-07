@@ -1,0 +1,29 @@
+<div class="container-fluid">
+    {{#if categories}}
+        {{#each categories}}
+            <div class="row">
+                <div class="col-lg-12">
+                    <h4>All expenses with category {{this.name}}</h4>
+                    <hr />
+                    <p><img src={{this.picture}} alt={{this.name}} /></p>
+                    <hr />
+
+                         {{!-- <h3>For date {{this.date}}</h3>
+                         <p><h4>Total expenses sum for the day</h4>{{this.totalDayExpense}} lv</p> --}}
+
+                        {{#each this.expenses}}
+                          <h3>For date {{this.date}}</h3>
+                          <p>{{this.description}}</p>
+                          <hr />
+                          <p><h4>Total expenses sum for the day</h4>{{this.totalDayExpense}} lv</p>
+                          <p><a class="btn btn-default" href="/expenseDetails?id={{this._id}}">More Details..</a></p>
+                        {{/each}}
+                    
+
+                </div>
+            </div>
+        {{/each}}
+    {{else}}
+        <h3>Sorry.. no expenses with that category.</h3>
+    {{/if}}
+</div>

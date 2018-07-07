@@ -1,0 +1,41 @@
+
+<div class="row">
+    <div class="col-lg-4"></div>
+    <div class="col-lg-4">
+        <p>
+            {{#if globalError}}       
+                 <h3>{{globalError}}</h3>     
+             {{/if}}
+        </p>
+
+        <form method="POST" action="/editCategory?category={{category._id}}">
+              <div class="form-group">
+                <label for="name">Category Name:</label>
+                <input type="text" name="name" value={{category.name}} class="form-control"  aria-describedby="categoryNameHelp" placeholder="Enter product's name">
+                <small id="categoryNameHelp" class="form-text text-muted">food, financial etc..</small>
+             </div>
+
+             <div class="form-group">
+                <label for="picture">Category Image:</label>
+                <input type="text" name="picture" value={{category.picture}} class="form-control"  aria-describedby="categoryPictureHelp" placeholder="Enter photo's url">
+                <small id="categoryPictureHelp" class="form-text text-muted">Just put a link of the image</small>
+             </div>
+
+           
+
+             <button type="submit" class="btn btn-primary">Save Changes</button>
+
+        </form>
+    </div>
+    <div class="col-lg-4"></div>
+</div>
+
+<hr />
+
+<div class="row">
+    <div class="col-lg-4"></div>
+    <div class="col-lg-4">
+        <h4>You can edit categories from <a href="/selectCategoryForEdit">here</a></h4>
+    </div>
+    <div class="col-lg-4"></div>
+</div>

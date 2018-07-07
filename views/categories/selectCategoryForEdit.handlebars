@@ -1,0 +1,51 @@
+
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-4"></div>
+        <div class="col-lg-4">
+
+            {{#if categories}}
+                <form method="GET" action="/editCategory">
+                    <div class="form-group">
+                        <label for="category">Select product to edit</label>
+                            <select  class="form-control"  name="category" aria-describedby="categoryNeededHelp" placeholder="just select category for editing">
+                                {{#each categories}}
+                                    <option value={{this._id}}>{{this.name}}</option>
+                                {{/each}}
+                            </select>
+                    <small id="categoryNeededHelp" class="form-text text-muted">Just select category for editing and click button to go forward with editing process</small><br /><br />
+
+                    
+                    <button class="btn btn-primary" type="submit">Go Edit</button>
+                    </div>
+                </form> 
+
+                <hr />
+
+
+                <form method="POST" action="/deleteCategory">
+                    <div class="form-group">
+                        <label for="category">Select category to <strong>DELETE</strong></label>
+                            <select  class="form-control"  name="category" aria-describedby="categoryNeededHelp" placeholder="just select product for editing">
+                                {{#each categories}}
+                                    <option value={{this._id}}>{{this.name}}</option>
+                                {{/each}}
+                            </select>
+                    <small id="categoryNeededHelp" class="form-text text-muted">Just select category for delete and click button to go delete it</small><br /><br />
+
+                    
+                    <button class="btn btn-danger" type="submit">Go DELETE</button>
+                    </div>
+                </form> 
+
+            {{else}}
+                You don't have available categories for editing or deleting. Yu can create some from <a href="/createCategory">here</a>
+
+            {{/if}}
+
+
+        </div>
+        <div class="col-lg-4"></div>
+    </div>
+</div>
