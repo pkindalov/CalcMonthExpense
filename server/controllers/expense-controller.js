@@ -239,6 +239,7 @@ module.exports = {
   expenseDetailsById: (req, res) => {
     let expenseId = req.query.id
     let userId = req.user.id
+    let formattedDate = ''
     // let expenseSumForAllProducts = 0
 
     Expense
@@ -246,6 +247,9 @@ module.exports = {
     .populate('products')
     .populate('categories')
     .then(expense => {
+      formattedDate = dateHelpers.getTodayDateWithoutTime(expense.date)
+      expense.formattedDate = formattedDate
+
       Product
           .find({'author': userId})
           .populate('products')
@@ -521,6 +525,35 @@ module.exports = {
           })
         })
     }
+  },
+
+  showExpensesByCategory: (req, res) => {
+    let user = req.user.id
+    let categoryName = req.query.name
+    let categories = []
+
+    Expense
+      .find({'user': user})
+      .populate('categories')
+      .then(expenses => {
+        // console.log(expenses)
+        expenses.forEach(expense => {
+          expense.categories.forEach(category => {
+            // console.log(category)
+            if (category.name === categoryName) {
+              category.date = dateHelpers.getTodayDateWithoutTime(expense.date)
+              category.totalDayExpense = expense.totalDayExpense
+              categories.push(category)
+            }
+          })
+        })
+
+        console.log(categories)
+
+        res.render('categories/listExpensesByCategoryName', {
+          categories: categories
+        })
+      })
   }
 
 }
