@@ -1,38 +1,47 @@
-<div class="container-fluid">
-
-{{#if expenses}}
-    {{#each expenses}}
+<div class="container">
     <div class="row">
-        <div class="col-lg-6">
-            <p>
-                Expense for <a class="btn btn-primary" href="/expenseDetails?id={{this._id}}">{{this.formattedDate}}</a>
-                <a class="btn btn-success" href="/editExpense?id={{this._id}}">Edit</a>
-                <a class="btn btn-danger" href="/deleteExpense?id={{this._id}}">Delete</a>
-            </p>
+        <div class="col-lg-12">
+            {{#if expenses}}
+                <h3>Expenses for </h3>
+                <hr />
+                {{#each expenses}}
+                <div class="row">
+                    <div class="col-lg-6">
+                        <p>
+                           <a class="btn btn-primary" href="/expenseDetails?id={{this._id}}">{{this.formattedDate}}</a>
+                            <a class="btn btn-success" href="/editExpense?id={{this._id}}">Edit</a>
+                            <a class="btn btn-danger" href="/deleteExpense?id={{this._id}}">Delete</a>
+                        </p>
+                    </div>
+                </div>
+                {{/each}}
+
+                {{#if hasPrevPage}}
+                    <a href="/searchExpenses?dateFrom={{dateFrom}}&dateTo={{dateTo}}&page={{prevPage}}">Prev</a>
+                    {{!-- <a href="/searchExpenses?dateFrom={{dateFrom}}&dateTo={{dateTo}}&page={{prevPage}}&sortAsc=true">Sort Ascending</a> |
+                    <a href="/searchExpenses?dateFrom={{dateFrom}}&dateTo={{dateTo}}&page={{prevPage}}">Sort Descending</a> --}}
+                {{/if}}    
+
+                {{#if hasNextPage}}
+                    <a href="/searchExpenses?dateFrom={{dateFrom}}&dateTo={{dateTo}}&page={{nextPage}}">Next</a> |
+                        {{!-- <a href="/searchExpenses?dateFrom={{dateFrom}}&dateTo={{dateTo}}&page={{nextPage}}&sortAsc=true">Sort Ascending</a> |
+                    <a href="/searchExpenses?dateFrom={{dateFrom}}&dateTo={{dateTo}}&page={{nextPage}}">Sort Descending</a> --}}
+                {{/if}}
+
+                    <a href="/searchExpenses?dateFrom={{dateFrom}}&dateTo={{dateTo}}&sortAsc=true">Sort Ascending</a> |
+                    <a href="/searchExpenses?dateFrom={{dateFrom}}&dateTo={{dateTo}}">Sort Descending</a>
+
+            {{else}}
+
+            <h3>Sorry.. nothing found</h3>
+
+            {{/if}}
+
+
+
         </div>
     </div>
-    {{/each}}
 
-    {{#if hasPrevPage}}
-        <a href="/searchExpenses?dateFrom={{dateFrom}}&dateTo={{dateTo}}&page={{prevPage}}">Prev</a>
-        {{!-- <a href="/searchExpenses?dateFrom={{dateFrom}}&dateTo={{dateTo}}&page={{prevPage}}&sortAsc=true">Sort Ascending</a> |
-        <a href="/searchExpenses?dateFrom={{dateFrom}}&dateTo={{dateTo}}&page={{prevPage}}">Sort Descending</a> --}}
-    {{/if}}    
-
-    {{#if hasNextPage}}
-        <a href="/searchExpenses?dateFrom={{dateFrom}}&dateTo={{dateTo}}&page={{nextPage}}">Next</a> |
-            {{!-- <a href="/searchExpenses?dateFrom={{dateFrom}}&dateTo={{dateTo}}&page={{nextPage}}&sortAsc=true">Sort Ascending</a> |
-        <a href="/searchExpenses?dateFrom={{dateFrom}}&dateTo={{dateTo}}&page={{nextPage}}">Sort Descending</a> --}}
-    {{/if}}
-
-        <a href="/searchExpenses?dateFrom={{dateFrom}}&dateTo={{dateTo}}&sortAsc=true">Sort Ascending</a> |
-        <a href="/searchExpenses?dateFrom={{dateFrom}}&dateTo={{dateTo}}">Sort Descending</a>
-
-{{else}}
-
-<h3>Sorry.. nothing found</h3>
-
-{{/if}}
 
 
    
