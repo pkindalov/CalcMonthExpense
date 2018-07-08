@@ -224,14 +224,17 @@ module.exports = {
       return
     }
     let date = new Date(req.query.date)
+    let formattedDate = req.query.date
 
     Expense
       .findOne({'date': date})
       .populate('products')
       .then(expense => {
+        expense.formattedDate = formattedDate
         // console.log(expense)
         res.render('expenses/oneDateExpense', {
           expense: expense
+
         })
       })
   },

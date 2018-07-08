@@ -3,7 +3,7 @@
     <div class="row">
         <div class="col-lg-12">
             {{#if expense}}
-            <p>Expense maded on {{expense.date}}</p>
+            <p>Expense maded on {{expense.formattedDate}}</p>
             <p>Products buyed on this date</p>
             {{#each expense.products}}
                 <p>Product name: {{this.name}}</p>
@@ -13,10 +13,12 @@
 
             <p>Reason for buying this: {{expense.description}}</p>
             <p>Do you really need these products? {{expense.isItAbsolutelyNeeded}}</p>
+            <a class="btn btn-success" href="/expenseDetails?id={{expense._id}}">See More..</a>
         </div>
 
         {{else}}
             <h3>You have no expenses on this date.</h3>
+
         {{/if}}
     </div>
 </div>

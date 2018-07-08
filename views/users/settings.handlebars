@@ -3,7 +3,37 @@
         <div class="col-lg-12">
             <h3>Permamently remove account:</h3>
             <p><strong><h4>Warning!</h4></strong> This action is permamently. After this you can't re-activate your account. You must do new.</p>
-            <a class="btn btn-danger" href="/permRemoveAccount">Remove Account</a>
+            {{!-- <a class="btn btn-danger" href="/permRemoveAccount">Remove Account</a> --}}
+
+         <!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#deleteAccontModal">
+  Remove Account
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="deleteAccontModal" tabindex="-1" role="dialog" aria-labelledby="deleteAccontModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteAccontModalLabel">Confirm Delete?</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Are you sure to remove completely your account ? Warning! This action is permamently. If you remove your account now, you will register again in future.
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <a class="btn btn-danger" href="/permRemoveAccount">Remove Account</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
         </div>
     </div>
 </div>
