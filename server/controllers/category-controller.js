@@ -80,16 +80,20 @@ module.exports = {
     Expense
       .findById(expenseId)
       .then(expense => {
-        let findPosCat = expense.categories.indexOf(categoryForRemoving)
-        expense.categories.splice(findPosCat, 1)
-        expense.save()
+        if (expense) {
+          let findPosCat = expense.categories.indexOf(categoryForRemoving)
+          expense.categories.splice(findPosCat, 1)
+          expense.save()
+        }
 
         Category
           .findById(categoryForRemoving)
           .then(category => {
-            let pos = category.expenses.indexOf(expenseId)
-            category.expenses.splice(pos, 1)
-            category.save()
+            if (category) {
+              let pos = category.expenses.indexOf(expenseId)
+              category.expenses.splice(pos, 1)
+              category.save()
+            }
           })
       })
 

@@ -230,8 +230,10 @@ module.exports = {
       .findOne({'date': date})
       .populate('products')
       .then(expense => {
-        expense.formattedDate = formattedDate
-        // console.log(expense)
+        if (expense) {
+          expense.formattedDate = formattedDate
+        }
+
         res.render('expenses/oneDateExpense', {
           expense: expense
 
@@ -243,7 +245,7 @@ module.exports = {
     let expenseId = req.query.id
     let userId = req.user.id
     let formattedDate = ''
-    // let expenseSumForAllProducts = 0
+    let expenseSumForAllProducts = 0
 
     Expense
     .findById(expenseId)
@@ -259,23 +261,23 @@ module.exports = {
           .then(products => {
             // console.log(expense.categories)
 
-            // expense.products.forEach(product => {
-            //   let expense = Number(product.price)
-            //   expenseSumForAllProducts += expense
-            // })
+            expense.products.forEach(product => {
+              let expense = Number(product.price)
+              expenseSumForAllProducts += expense
+            })
 
             Category
-              .find({'author': userId})
-              .then(categories => {
-                res.render('expenses/expenseDetails', {
-                  expense: expense,
-                  products: products,
-                  availableProducts: products.length > 0,
-                  availableCategories: categories.length > 0,
-                  categories: categories
-                  // totalExpense: expenseSumForAllProducts
-                })
+            .find({'author': userId})
+            .then(categories => {
+              res.render('expenses/expenseDetails', {
+                expense: expense,
+                products: products,
+                availableProducts: products.length > 0,
+                availableCategories: categories.length > 0,
+                categories: categories,
+                totalExpense: expenseSumForAllProducts
               })
+            })
           })
     })
   },

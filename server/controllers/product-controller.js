@@ -54,9 +54,9 @@ module.exports = {
         product.save()
         expense.products.push(productId)
 
-        let dayExpense = Number(expense.totalDayExpense)
-        dayExpense += Number(product.price)
-        expense.totalDayExpense = '' + dayExpense
+        // let dayExpense = Number(expense.totalDayExpense)
+        // dayExpense += Number(product.price)
+        // expense.totalDayExpense = '' + dayExpense
         expense.save()
       })
     })
@@ -88,14 +88,14 @@ module.exports = {
               product.save()
             }
 
-            let totalDayExpense = Number(expense.totalDayExpense)
-            totalDayExpense -= Number(product.price)
+            // let totalDayExpense = Number(expense.totalDayExpense)
+            // totalDayExpense -= Number(product.price)
 
-            if (totalDayExpense < 0) {
-              totalDayExpense = 0
-            }
+            // if (totalDayExpense < 0) {
+            //   totalDayExpense = 0
+            // }
 
-            expense.totalDayExpense = '' + totalDayExpense
+            // expense.totalDayExpense = '' + totalDayExpense
             expense.save()
           })
       })
