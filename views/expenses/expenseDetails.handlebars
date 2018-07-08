@@ -3,6 +3,8 @@
 <div class="container">
     <div class="row">
         <div class="col-lg-12">
+            {{error}}
+
             {{#if expense}}
             <h4>Expense maded on {{expense.formattedDate}}</h4>
             <h4>Products buyed on this date</h4>
@@ -34,7 +36,8 @@
             <p>Do you really need these products? {{expense.isItAbsolutelyNeeded}}</p>
 
             <hr />
-            <p><strong>Total Money Spent For Products Today: {{expense.totalDayExpense}} lv</strong></p>
+            {{!-- <p><strong>Total Money Spent For Products Today: {{expense.totalDayExpense}} lv</strong></p> --}}
+            <p><strong>Total Money Spent For Products Today: {{totalExpense}} lv</strong></p>
             <p>
                 <a class="btn btn-primary" name="addProduct">Add Another Product</a>
                  <a class="btn btn-danger" name="removeProduct">Remove Product</a>
@@ -88,7 +91,36 @@
                             <small id="productNeededHelp" class="form-text text-muted">Choose product which you buy. If is it empty just <a href="/createProduct">create a product</a></small>
                         </div>
 
-                        <button class="btn btn-danger" type="submit">Remove</button>
+                        {{!-- <button class="btn btn-danger" type="submit">Remove</button> --}}
+
+                         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#deleteProductModal">Remove Product</button>
+
+                        <!-- Modal -->
+                        <div class="modal fade" id="deleteProductModal" tabindex="-1" role="dialog" aria-labelledby="deleteProductModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="deleteProductModalLabel">Confirm Delete Product?</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                Are you sure to remove this product ?
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button class="btn btn-danger" type="submit">Go DELETE</button>
+                                
+                            </div>
+                            </div>
+                        </div>
+                        </div>
+
+
+
+
+
 
                     {{else}}
 
@@ -162,7 +194,32 @@
                             <small id="categoryNeededHelp" class="form-text text-muted">Choose category which you will remove from this expense. If is it empty just <a href="/createCategory">create a category</a></small>
                         </div>
 
-                        <button class="btn btn-danger" type="submit">Remove Category</button>
+                        {{!-- <button class="btn btn-danger" type="submit">Remove Category</button> --}}
+                           <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#deleteCategoryModal">Remove Category</button>
+
+                            <!-- Modal -->
+                            <div class="modal fade" id="deleteCategoryModal" tabindex="-1" role="dialog" aria-labelledby="deleteCaategoryModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="deleteCaategoryModalLabel">Confirm Delete Category?</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    Are you sure to remove this category ?
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button class="btn btn-danger" type="submit">Go DELETE</button>
+                                </div>
+                                </div>
+                            </div>
+                            </div>
+
+
+
 
                     {{else}}
 
