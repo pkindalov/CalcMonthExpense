@@ -9,7 +9,7 @@ let expenseSchema = new mongoose.Schema({
   products: [{type: ObjectId, ref: 'Product'}],
   description: {type: String, required: REQUIRED_VALIDATION_MESSAGE},
   isItAbsolutelyNeeded: {type: Boolean, required: REQUIRED_VALIDATION_MESSAGE},
-  totalDayExpense: {type: String, required: REQUIRED_VALIDATION_MESSAGE},
+  // totalDayExpense: {type: String, required: REQUIRED_VALIDATION_MESSAGE},
   categories: [{type: ObjectId, ref: 'Category'}]
 })
 

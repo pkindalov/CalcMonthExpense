@@ -1,4 +1,5 @@
 const Category = require('../data/Category')
+const Product = require('../data/Product')
 const User = require('../data/User')
 const Expense = require('../data/Expense')
 const dateHelpers = require('../utilities/dateHelpers')
@@ -175,6 +176,8 @@ module.exports = {
   showExpensesByCategory: (req, res) => {
     let categoryName = req.query.name
     let user = req.user.id
+    let productsPromises = []
+    let totalDayExpense = 0
 
     Category
       .find({'author': user, 'name': categoryName})
@@ -184,12 +187,32 @@ module.exports = {
         categories.forEach(category => {
           category.expenses.forEach(expense => {
             expense.formattedDate = dateHelpers.getTodayDateWithoutTime(expense.date)
+
+            expense.products.forEach(product => {
+              let productPromise = Product.findById(product)
+              productsPromises.push(productPromise)
+            })
+
+            // expense.products.forEach(product => {
+            //   console.log(product.price)
+            //   totalDayExpense += Number(product.price)
+            // })
           })
         })
 
-        res.render('categories/listExpensesByCategoryName', {
-          categories: categories
-        })
+        Promise.all(productsPromises)
+                           .then(products => {
+                            //  console.log(products)
+                             products.forEach(product => {
+                              //  console.log(product.price)
+                               totalDayExpense += Number(product.price)
+                             })
+
+                             res.render('categories/listExpensesByCategoryName', {
+                               categories: categories,
+                               totalDayExpense: totalDayExpense
+                             })
+                           })
       })
   }
 }

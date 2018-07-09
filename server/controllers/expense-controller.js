@@ -75,18 +75,18 @@ module.exports = {
                 return
               }
 
-              Product
-                .findById(expenseProduct)
-                .then(firstProduct => {
-                  Expense
+              // Product
+                // .findById(expenseProduct)
+                // .then(firstProduct => {
+              Expense
                     .create({
                       user: authorOfExpense,
                       date: convertedDate,
                       products: expenseProduct,
                       description: expenseDescription,
                       isItAbsolutelyNeeded: needed,
-                      todayDate: todayDate,
-                      totalDayExpense: firstProduct.price
+                      todayDate: todayDate
+                      // totalDayExpense: firstProduct.price
 
                     })
                     .then(expense => {
@@ -124,7 +124,7 @@ module.exports = {
                             res.redirect('/')
                           })
                     })
-                })
+                // })
             })
         }
       })
@@ -343,8 +343,14 @@ module.exports = {
     Expense
       .find({'date': {'$gte': startDateConv, '$lte': endMonthConv}})
       // .find({'date': {'$gte': new Date(startDate), '$lte': new Date(endMonth)}})
-      // .populate('products')
+      .populate('products')
       .then(expenses => {
+        expenses.forEach(expense => {
+          expense.products.forEach(product => {
+            totalExpenseSum += Number(product.price)
+          })
+        })
+
         // for (let expense of expenses) {
         //   for (let productId of expense.products) {
         //     let promise = Product.findById(productId)
@@ -366,9 +372,9 @@ module.exports = {
         //                  })
         //                })
 
-        for (let expense of expenses) {
-          totalExpenseSum += Number(expense.totalDayExpense)
-        }
+        // for (let expense of expenses) {
+        //   totalExpenseSum += Number(expense.totalDayExpense)
+        // }
 
         res.render('expenses/thisMonthExpenses', {
           expenses: expenses,
@@ -530,35 +536,40 @@ module.exports = {
           })
         })
     }
-  },
-
-  showExpensesByCategory: (req, res) => {
-    let user = req.user.id
-    let categoryName = req.query.name
-    let categories = []
-
-    Expense
-      .find({'user': user})
-      .populate('categories')
-      .then(expenses => {
-        // console.log(expenses)
-        expenses.forEach(expense => {
-          expense.categories.forEach(category => {
-            // console.log(category)
-            if (category.name === categoryName) {
-              category.date = dateHelpers.getTodayDateWithoutTime(expense.date)
-              category.totalDayExpense = expense.totalDayExpense
-              categories.push(category)
-            }
-          })
-        })
-
-        console.log(categories)
-
-        res.render('categories/listExpensesByCategoryName', {
-          categories: categories
-        })
-      })
   }
+
+  // showExpensesByCategory: (req, res) => {
+    // let user = req.user.id
+    // let categoryName = req.query.name
+    // let categories = []
+    // let totalExpenseSum =
+
+    // Expense
+    //   .find({'user': user})
+    //   .populate('categories')
+    //   .then(expenses => {
+    //     // console.log(expenses)
+    //     expenses.forEach(expense => {
+    //       expense.categories.forEach(category => {
+    //         // console.log(category)
+    //         if (category.name === categoryName) {
+    //           category.date = dateHelpers.getTodayDateWithoutTime(expense.date)
+
+    //           // expense.products.forEach(product => {
+    //           //   category.totalDayExpense += Number(product.price)
+    //           //   // category.totalDayExpense = expense.totalDayExpense
+    //           // })
+    //           categories.push(category)
+    //         }
+    //       })
+    //     })
+
+    //     // console.log(categories)
+
+    //     res.render('categories/listExpensesByCategoryName', {
+    //       categories: categories
+    //     })
+    //   })
+  // }
 
 }
