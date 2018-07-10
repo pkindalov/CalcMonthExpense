@@ -53,7 +53,8 @@
                                 {{#each products}}
                                          <option value={{this._id}}>{{this.name}}</option>
                                 {{/each}}
-                            </select>
+                            </select><br />
+                            <input class="form-control" type="number" name="count" value="1" />
                             <small id="productNeededHelp" class="form-text text-muted">Choose product which you buy. If is it empty just <a href="/createProduct">create a product</a></small>
                         </div>
 

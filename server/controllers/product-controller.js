@@ -42,6 +42,7 @@ module.exports = {
     let reqBody = req.body
     let productId = reqBody.product
     let expenseId = req.query.id
+    let count = Number(reqBody.count)
     let url = '/expenseDetails?id=' + expenseId
 
     Product
@@ -52,7 +53,10 @@ module.exports = {
       .then(expense => {
         product.expenses.push(expense._id)
         product.save()
-        expense.products.push(productId)
+
+        for (let n = 0; n < count; n++) {
+          expense.products.push(productId)
+        }
 
         // let dayExpense = Number(expense.totalDayExpense)
         // dayExpense += Number(product.price)

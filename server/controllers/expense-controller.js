@@ -403,18 +403,27 @@ module.exports = {
       .then(expense => {
         dateFormatted = dateHelpers.getTodayDateWithoutTime(expense.date)
 
-        Category
-                .find({'author': userId})
-                .then(categories => {
-                  res.render('expenses/editExpense', {
-                    expense: expense,
-                    dateFormatted: dateFormatted,
-                    availableProducts: expense.products.length > 0,
-                    availableCategories: categories.length > 0,
-                    products: expense.products,
-                    categories: categories
-                  })
-                })
+        Product
+          .find({'author': userId})
+          .then(products => {
+
+            Category
+                    .find({'author': userId})
+                    .then(categories => {
+                      res.render('expenses/editExpense', {
+                        expense: expense,
+                        dateFormatted: dateFormatted,
+                        availableProducts: products.length > 0,
+                        availableCategories: categories.length > 0,
+                        products: products,
+                        categories: categories
+                      })
+                    })
+
+
+
+          })
+
       })
   },
 
