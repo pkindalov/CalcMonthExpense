@@ -331,8 +331,10 @@ module.exports = {
   thisMonthExpenses: (req, res) => {
     let startDate = dateHelpers.getThisMonthDateBegin(new Date())
     let endMonth = dateHelpers.getCurrentMonth(new Date())
+    let todayDay = dateHelpers.getTodayDateWithoutTime(new Date())
     let totalExpenseSum = 0
     let avgExpensePerDay = 0
+    let avgExpenseUntilNow = 0
 
     let startDateConv = new Date(startDate)
     let endMonthConv = new Date(endMonth)
@@ -375,14 +377,19 @@ module.exports = {
         //   totalExpenseSum += Number(expense.totalDayExpense)
         // }
 
+        todayDay = Number(todayDay.split('-')[2])
+        // console.log(todayDay)
+        // console.log(typeof todayDay)
         avgExpensePerDay = totalExpenseSum / expenses.length
+        avgExpenseUntilNow = totalExpenseSum / todayDay
 
         res.render('expenses/thisMonthExpenses', {
           expenses: expenses,
           totalExpenseSum: totalExpenseSum,
           startDate: startDate,
           endMonth: endMonth,
-          avgExpensePerDay: avgExpensePerDay.toFixed(2)
+          avgExpensePerDay: avgExpensePerDay.toFixed(2),
+          avgExpenseUntilNow: avgExpenseUntilNow.toFixed(2)
         })
       })
         // expenses.products.forEach(product => {
