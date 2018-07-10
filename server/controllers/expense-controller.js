@@ -32,7 +32,6 @@ module.exports = {
     let expenseMadedOn = reqBody.date
     let convertedDate = new Date(expenseMadedOn)
     let expenseDescription = reqBody.description
-    let needed = (reqBody.needed === 'true')
     let authorOfExpense = req.user.id
     let expenseProduct = reqBody.product
     let expenseExists = false
@@ -84,7 +83,6 @@ module.exports = {
                       date: convertedDate,
                       products: expenseProduct,
                       description: expenseDescription,
-                      isItAbsolutelyNeeded: needed,
                       todayDate: todayDate
                       // totalDayExpense: firstProduct.price
 
@@ -334,6 +332,7 @@ module.exports = {
     let startDate = dateHelpers.getThisMonthDateBegin(new Date())
     let endMonth = dateHelpers.getCurrentMonth(new Date())
     let totalExpenseSum = 0
+    let avgExpensePerDay = 0
 
     let startDateConv = new Date(startDate)
     let endMonthConv = new Date(endMonth)
@@ -376,11 +375,14 @@ module.exports = {
         //   totalExpenseSum += Number(expense.totalDayExpense)
         // }
 
+        avgExpensePerDay = totalExpenseSum / expenses.length
+
         res.render('expenses/thisMonthExpenses', {
           expenses: expenses,
           totalExpenseSum: totalExpenseSum,
           startDate: startDate,
-          endMonth: endMonth
+          endMonth: endMonth,
+          avgExpensePerDay: avgExpensePerDay.toFixed(2)
         })
       })
         // expenses.products.forEach(product => {
@@ -406,7 +408,6 @@ module.exports = {
         Product
           .find({'author': userId})
           .then(products => {
-
             Category
                     .find({'author': userId})
                     .then(categories => {
@@ -419,11 +420,7 @@ module.exports = {
                         categories: categories
                       })
                     })
-
-
-
           })
-
       })
   },
 
@@ -433,14 +430,14 @@ module.exports = {
 
     let dateConv = new Date(reqBody.date)
     let editedDescription = reqBody.description
-    let editedIsItAbsolutelyNeeded = reqBody.needed
+    // let editedIsItAbsolutelyNeeded = reqBody.needed
 
     Expense
       .findById(expenseId)
       .then(expense => {
         expense.date = dateConv
         expense.description = editedDescription
-        expense.isItAbsolutelyNeeded = editedIsItAbsolutelyNeeded
+        // expense.isItAbsolutelyNeeded = editedIsItAbsolutelyNeeded
         expense.save()
         res.redirect('/editExpense?id=' + expenseId)
       })

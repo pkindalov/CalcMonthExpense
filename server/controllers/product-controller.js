@@ -1,10 +1,20 @@
 const Product = require('../data/Product')
 const Expense = require('../data/Expense')
+const Category = require('../data/Category')
 const User = require('../data/User')
 
 module.exports = {
   createProductGET: (req, res) => {
-    res.render('products/createProduct')
+    let user = req.user.id
+
+    Category
+      .find({'author': user})
+      .then(categories => {
+        res.render('products/createProduct', {
+          availableCategories: categories.length > 0,
+          categories: categories
+        })
+      })
   },
 
   createProductPOST: (req, res) => {
@@ -14,28 +24,44 @@ module.exports = {
     let productPrice = reqBody.price
     let productPhoto = reqBody.photo
     let productAuthor = req.user.id
+    let needed = (reqBody.needed === 'true')
+    let productDescription = reqBody.description
+    let productCategory = reqBody.category
 
-    Product
-        .create({
-          author: productAuthor,
-          name: productName,
-          price: productPrice,
-          photo: productPhoto
-        }).then(createdProduct => {
-          User
-              .findById(productAuthor)
-              .then(productAuthor => {
-                let ifThisProductExists = productAuthor.products.indexOf(createdProduct._id)
+    Category
+      .find({'author': productAuthor})
+      .then(categories => {
+        if (categories.length === 0) {
+          res.render('products/createProduct', {
+            errorDescription: 'You must create a category. Just follow the link bellow'
+          })
+        } else {
+          Product
+              .create({
+                author: productAuthor,
+                name: productName,
+                price: productPrice,
+                photo: productPhoto,
+                isItAbsolutelyNeeded: needed,
+                description: productDescription,
+                category: productCategory
+              }).then(createdProduct => {
+                User
+                    .findById(productAuthor)
+                    .then(productAuthor => {
+                      let ifThisProductExists = productAuthor.products.indexOf(createdProduct._id)
 
-                if (ifThisProductExists < 0) {
-                  productAuthor.products.push(createdProduct._id)
-                  productAuthor.save()
-                } else {
-                  res.locals.globalError = 'This product already exists'
-                }
-                res.redirect('/')
+                      if (ifThisProductExists < 0) {
+                        productAuthor.products.push(createdProduct._id)
+                        productAuthor.save()
+                      } else {
+                        res.locals.globalError = 'This product already exists'
+                      }
+                      res.redirect('/')
+                    })
               })
-        })
+        }
+      })
   },
 
   addProductToExpense: (req, res) => {
@@ -121,14 +147,25 @@ module.exports = {
 
   editProductGET: (req, res) => {
     let productId = req.query.product
+    let userId = req.user.id
 
-    Product
-      .findById(productId)
-      .then(product => {
-        res.render('products/editProduct', {
-          product: product
-        })
+    Category
+      .find({'author': userId})
+      .then(categories => {
+        
+        Product
+          .findById(productId)
+          .populate('category')
+          .then(product => {
+            // console.log(product)
+            res.render('products/editProduct', {
+              product: product,
+              categories: categories,
+              currentCategory: product.category.name
+            })
+          })
       })
+
   },
 
   editProductPOST: (req, res) => {
@@ -137,6 +174,9 @@ module.exports = {
     let editedName = reqBody.name
     let editedPrice = reqBody.price
     let editedPhoto = reqBody.photo
+    let editedNeeded = (reqBody.needed === 'true')
+    let editedDescription = reqBody.description
+    let editedCategory = reqBody.category
 
     Product
       .findById(productId)
@@ -144,6 +184,9 @@ module.exports = {
         product.name = editedName
         product.price = editedPrice
         product.photo = editedPhoto
+        product.isItAbsolutelyNeeded = editedNeeded
+        product.description = editedDescription
+        product.category = editedCategory
         product.save()
 
         res.redirect('/selectProductForEdit')

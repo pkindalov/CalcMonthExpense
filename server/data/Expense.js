@@ -8,7 +8,7 @@ let expenseSchema = new mongoose.Schema({
   date: {type: Date, default: Date.now, required: REQUIRED_VALIDATION_MESSAGE},
   products: [{type: ObjectId, ref: 'Product'}],
   description: {type: String, required: REQUIRED_VALIDATION_MESSAGE},
-  isItAbsolutelyNeeded: {type: Boolean, required: REQUIRED_VALIDATION_MESSAGE},
+  // isItAbsolutelyNeeded: {type: Boolean, required: REQUIRED_VALIDATION_MESSAGE},
   // totalDayExpense: {type: String, required: REQUIRED_VALIDATION_MESSAGE},
   categories: [{type: ObjectId, ref: 'Category'}]
 })

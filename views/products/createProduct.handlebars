@@ -27,6 +27,46 @@
                 <small id="productPriceHelp" class="form-text text-muted">Real price of the product. ONLY NUMBER</small>
              </div>
 
+              <div class="form-group">
+                <label for="needed">Do you really need for this product?:</label>
+                <select  class="form-control"  name="needed" aria-describedby="producNeededHelp" placeholder="Is it really needed this?">
+                    <option value="true">Yes</option>
+                    <option value="false">No</option>
+                </select>
+                <small id="productNeededHelp" class="form-text text-muted">Is it really need this product ?</small>
+             </div>
+
+            <h3>{{errorDescription}}</h3>
+             {{#if availableCategories}}
+                   <div class="form-group">
+                <label for="category">Select category of product:</label>
+                <select  class="form-control"  name="category" aria-describedby="category" placeholder="type of product">
+                   {{#each categories}}
+                        <option value={{this._id}}>{{this.name}}</option>
+                   {{/each}}
+                </select>
+                <small id="category" class="form-text text-muted">Choose type of product <a href="/createCategory">create a category</a></small>
+             </div>
+
+             {{else}}
+                <div class="form-group">
+                <label for="product">Select category of product</label>
+                <select  class="form-control"  name="category" aria-describedby="category" placeholder="type of expense">
+                   <option value="noavailable">You must create a category  from a link below</option>
+                </select>
+                <small id="category" class="form-text text-muted">Choose type of product <a href="/createCategory">create a category</a></small>
+             </div>
+
+             {{/if}}
+
+
+
+               <div class="form-group">
+                <label for="description">Product Description:</label>
+                <textarea  rows="5" cols="15" class="form-control"  name="description" aria-describedby="producDescriptionHelp" placeholder="Enter product's name"></textarea>
+                <small id="productDescriptionHelp" class="form-text text-muted">Add some short description about this expense</small>
+             </div>
+
              <button type="submit" class="btn btn-primary">Create</button>
              <button type="reset" class="btn btn-warning">Reset Form</button>
 

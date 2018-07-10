@@ -1,0 +1,5 @@
+db.getCollection('expenses').update({}, {$unset: {totalDayExpense:1}} , {multi: true});
+db.getCollection('expenses').update({}, {$unset: {isItAbsolutelyNeeded:1}} , {multi: true});
+db.getCollection('products').update({}, {$set: {isItAbsolutelyNeeded:true}} , {multi: true});
+db.getCollection('products').update({}, {$set: {description:'Must update description related to product'}} , {multi: true});
+db.getCollection('products').update({}, {$set: {category: {}}} , {multi: true});
