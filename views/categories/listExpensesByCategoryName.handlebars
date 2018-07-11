@@ -11,12 +11,26 @@
 
                          {{!-- <h3>For date {{this.date}}</h3>
                          <p><h4>Total expenses sum for the day</h4>{{this.totalDayExpense}} lv</p> --}}
+                       
+
 
                         {{#each this.expenses}}
                           <h3>For date {{this.formattedDate}}</h3>
-                          <p>{{this.description}}</p>
+                          {{!-- <p><h3>Description of expense:</h3>{{this.description}}</p> --}}
                           <hr />
-                          <p><h4>Total expenses sum for the day</h4>{{../../totalDayExpense}} lv</p>
+
+                          <p>
+                              <ul>
+                                 {{#each this.buyedProducts}}
+                                    <li>{{this.name}} - {{this.price}} lv</li>
+                                 {{/each}}
+                              </ul>
+
+                          </p>  
+
+                          <p><h4>Total expenses sum for the day</h4>{{this.totalDayExpense}} lv</p>
+                          {{!-- <p><h4>Total expenses sum for the day</h4>{{../this.totalDayExpense}} lv</p> --}}
+                          {{!-- <p><h4>Total expenses sum for the day</h4>{{../../totalDayExpense}} lv</p> --}}
                           <p><a class="btn btn-default" href="/expenseDetails?id={{this._id}}">More Details..</a></p>
                         {{/each}}
                     

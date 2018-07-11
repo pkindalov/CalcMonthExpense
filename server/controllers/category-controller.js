@@ -176,43 +176,75 @@ module.exports = {
   showExpensesByCategory: (req, res) => {
     let categoryName = req.query.name
     let user = req.user.id
-    let productsPromises = []
+    // let productsPromises = []
     let totalDayExpense = 0
+    let buyedProducts = []
 
     Category
       .find({'author': user, 'name': categoryName})
-      .populate('expenses')
+      // .populate('expenses')
+      .populate({path: 'expenses', populate: {path: 'products'}})
+
       .then(categories => {
-        // console.log(categories)
         categories.forEach(category => {
+          // console.log(category.expenses)
+
           category.expenses.forEach(expense => {
             expense.formattedDate = dateHelpers.getTodayDateWithoutTime(expense.date)
-
+            // category.totalDayExpense = 0
+            expense.totalDayExpense = 0
+            expense.buyedProducts = []
             expense.products.forEach(product => {
-              let productPromise = Product.findById(product)
-              productsPromises.push(productPromise)
+              // console.log(product.category)
+              // console.log('category id: ' + category._id + '           product category: ' + product.category)
+              // console.log('category id: ' + typeof category._id.toString() + '           product category: ' + typeof product.category.toString())
+              // console.log('product id:' + product.category)
+              if (category._id.toString() === product.category.toString()) {
+                totalDayExpense = Number(product.price)
+                // category.totalDayExpense += totalDayExpense
+                expense.totalDayExpense += totalDayExpense
+                expense.buyedProducts.push(product)
+              }
+              // console.log(category.totalDayExpense)
             })
+          })
+          
+          // category.products.forEach(product => {
+            // })
+          })
+
+        res.render('categories/listExpensesByCategoryName', {
+          categories: categories
+
+        })
+      })
+        // categories.forEach(category => {
+          // category.expenses.forEach(expense => {
+          //   console.log(expense)
+          //   expense.formattedDate = dateHelpers.getTodayDateWithoutTime(expense.date)
+
+          //   expense.products.forEach(product => {
+          //     let productPromise = Product.findById(product)
+          //     productsPromises.push(productPromise)
+          //   })
 
             // expense.products.forEach(product => {
             //   console.log(product.price)
             //   totalDayExpense += Number(product.price)
             // })
-          })
-        })
+          // })
+        // })
 
-        Promise.all(productsPromises)
-                           .then(products => {
-                            //  console.log(products)
-                             products.forEach(product => {
-                              //  console.log(product.price)
-                               totalDayExpense += Number(product.price)
-                             })
+        // Promise.all(productsPromises)
+        //                    .then(products => {
+        //                      products.forEach(product => {
+        //                        totalDayExpense += Number(product.price)
+        //                      })
 
-                             res.render('categories/listExpensesByCategoryName', {
-                               categories: categories,
-                               totalDayExpense: totalDayExpense
-                             })
-                           })
-      })
+        //                      res.render('categories/listExpensesByCategoryName', {
+        //                        categories: categories,
+        //                        totalDayExpense: totalDayExpense
+        //                      })
+        //                    })
   }
 }
