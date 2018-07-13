@@ -178,7 +178,7 @@ module.exports = {
     let user = req.user.id
     // let productsPromises = []
     let totalDayExpense = 0
-    let buyedProducts = []
+    // let buyedProducts = []
 
     Category
       .find({'author': user, 'name': categoryName})
@@ -188,6 +188,10 @@ module.exports = {
       .then(categories => {
         categories.forEach(category => {
           // console.log(category.expenses)
+
+          category.expenses.sort((expense1, expense2) => {
+            return expense1.date < expense2.date
+          })
 
           category.expenses.forEach(expense => {
             expense.formattedDate = dateHelpers.getTodayDateWithoutTime(expense.date)

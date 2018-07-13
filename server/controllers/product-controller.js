@@ -152,7 +152,6 @@ module.exports = {
     Category
       .find({'author': userId})
       .then(categories => {
-        
         Product
           .findById(productId)
           .populate('category')
@@ -165,7 +164,6 @@ module.exports = {
             })
           })
       })
-
   },
 
   editProductPOST: (req, res) => {
@@ -188,9 +186,8 @@ module.exports = {
         product.description = editedDescription
         product.category = editedCategory
         product.save()
-
-        res.redirect('/selectProductForEdit')
       })
+    res.redirect('/selectProductForEdit')
   },
 
   deleteProductByIdGET: (req, res) => {
