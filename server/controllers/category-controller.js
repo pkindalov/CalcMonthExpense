@@ -1,5 +1,5 @@
 const Category = require('../data/Category')
-const Product = require('../data/Product')
+// const Product = require('../data/Product')
 const User = require('../data/User')
 const Expense = require('../data/Expense')
 const dateHelpers = require('../utilities/dateHelpers')
@@ -212,10 +212,10 @@ module.exports = {
               // console.log(category.totalDayExpense)
             })
           })
-          
+
           // category.products.forEach(product => {
             // })
-          })
+        })
 
         res.render('categories/listExpensesByCategoryName', {
           categories: categories

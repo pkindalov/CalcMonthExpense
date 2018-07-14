@@ -176,6 +176,31 @@ module.exports = {
     let editedDescription = reqBody.description
     let editedCategory = reqBody.category
 
+    if (editedDescription.length < 1) {
+      let productId = req.query.product
+      let userId = req.user.id
+      let globalError = 'Description field cannot be empty'
+
+      Category
+        .find({'author': userId})
+        .then(categories => {
+          Product
+            .findById(productId)
+            .populate('category')
+            .then(product => {
+              // console.log(product)
+              res.render('products/editProduct', {
+                product: product,
+                categories: categories,
+                currentCategory: product.category.name,
+                globalError: globalError
+              })
+            })
+        })
+
+        return
+    }
+
     Product
       .findById(productId)
       .then(product => {
