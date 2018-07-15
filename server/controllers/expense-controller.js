@@ -335,6 +335,7 @@ module.exports = {
     let totalExpenseSum = 0
     let avgExpensePerDay = 0
     let avgExpenseUntilNow = 0
+    let user = req.user.id
 
     let startDateConv = new Date(startDate)
     let endMonthConv = new Date(endMonth)
@@ -342,7 +343,7 @@ module.exports = {
     // let promises = []
 
     Expense
-      .find({'date': {'$gte': startDateConv, '$lte': endMonthConv}})
+      .find({'user': user, 'date': {'$gte': startDateConv, '$lte': endMonthConv}})
       // .find({'date': {'$gte': new Date(startDate), '$lte': new Date(endMonth)}})
       .populate('products')
       .then(expenses => {
@@ -549,40 +550,109 @@ module.exports = {
           })
         })
     }
+  },
+
+  deleteExpensesByAPeriod: (req, res) => {
+    let user = req.user.id
+    let dateTo = req.query.dateTo
+    let dateFrom = req.query.dateFrom
+
+    let dateToConv = new Date(dateTo)
+    let dateFromConv = new Date(dateFrom)
+
+    Expense
+    .find({'user': user, 'date': {'$gte': dateFromConv, '$lte': dateToConv}})
+    .then(expenses => {
+      expenses.forEach(expense => {
+        expense.formattedDate = dateHelpers.getTodayDateWithoutTime(expense.date)
+      })
+      // console.log(expenses)
+      res.render('expenses/deleteExpensesByPeriod', {
+        expenses: expenses,
+        notAvailable: expenses.length === 0
+      })
+    })
+  },
+
+  deleteExpensesByAPeriodPOST: (req, res) => {
+    let user = req.user.id
+    let dateTo = req.query.dateTo
+    let dateFrom = req.query.dateFrom
+
+    let dateToConv = new Date(dateTo)
+    let dateFromConv = new Date(dateFrom)
+
+    let categoryPromises = []
+    let productsPromises = []
+    let userPromise = []
+
+    let userQuery = ''
+    let categoryQuery = ''
+    let productQuery = ''
+
+    let pos = 0
+
+    Expense
+      .find({'user': user, 'date': {'$gte': dateFromConv, '$lte': dateToConv}})
+      .then(expenses => {
+        expenses.forEach(expense => {
+          userQuery = User.findById(expense.user)
+          userPromise.push(userQuery)
+
+          expense.categories.forEach(expenseCategoryID => {
+            categoryQuery = Category.findById(expenseCategoryID)
+            categoryPromises.push(categoryQuery)
+          })
+
+          expense.products.forEach(expenseProductID => {
+            productQuery = Product.findById(expenseProductID)
+            productsPromises.push(productQuery)
+          })
+
+          Promise.all(productsPromises)
+                          .then(products => {
+                            products.forEach(product => {
+                              for (let pos = 0; pos < product.expenses.length; pos++) {
+                                if (product.expenses[pos] === expense._id) {
+                                  product.expenses.splice(pos, 1)
+                                  product.save()
+                                }
+                              }
+                            })
+                          })
+
+          Promise.all(categoryPromises)
+                       .then(categories => {
+                         categories.forEach(category => {
+                           for (let pos = 0; pos < category.expenses.length; pos++) {
+                             if (category.expenses[pos] === expense._id) {
+                               category.expenses.splice(pos, 1)
+                               category.save()
+                             }
+                           }
+                         })
+                       })
+
+          Promise.all(userPromise)
+                         .then(users => {
+                           users.forEach(user => {
+                             for (let pos = 0; pos < user.expenses.length; pos++) {
+                               if (user.expenses[pos] === expense._id) {
+                                 user.expenses.splice(pos, 1)
+                                 user.save()
+                               }
+                             }
+                           })
+                         })
+        })
+      })
+
+    Expense
+      .find({'user': user, 'date': {'$gte': dateFromConv, '$lte': dateToConv}})
+      .remove()
+      .then(
+        res.redirect('/')
+      )
   }
-
-  // showExpensesByCategory: (req, res) => {
-    // let user = req.user.id
-    // let categoryName = req.query.name
-    // let categories = []
-    // let totalExpenseSum =
-
-    // Expense
-    //   .find({'user': user})
-    //   .populate('categories')
-    //   .then(expenses => {
-    //     // console.log(expenses)
-    //     expenses.forEach(expense => {
-    //       expense.categories.forEach(category => {
-    //         // console.log(category)
-    //         if (category.name === categoryName) {
-    //           category.date = dateHelpers.getTodayDateWithoutTime(expense.date)
-
-    //           // expense.products.forEach(product => {
-    //           //   category.totalDayExpense += Number(product.price)
-    //           //   // category.totalDayExpense = expense.totalDayExpense
-    //           // })
-    //           categories.push(category)
-    //         }
-    //       })
-    //     })
-
-    //     // console.log(categories)
-
-    //     res.render('categories/listExpensesByCategoryName', {
-    //       categories: categories
-    //     })
-    //   })
-  // }
 
 }

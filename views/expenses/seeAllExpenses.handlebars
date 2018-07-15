@@ -1,3 +1,5 @@
+ <link rel="stylesheet" href="/css/styles.css">
+
 <div class="container">
     <div class="row">
         <div class="col-lg-12">
@@ -69,7 +71,46 @@
 
         </div>
     </div>
+        <hr />
 
+    <div class="row">
+        <div class="col-lg-12">
+            <h3>Delete expenses by period:</h3><br />
+            <form method="GET" action="/deleteExpensesByPeriod">
+                 <div class="form-group">
+                    <label for="dateFrom">from:</label>
+                     <div class='input-group dateFrom'>
+                    <input class="form-control" name="dateFrom"  /><br />
+                </div>
+            </div>
+
+             <div class="form-group">
+                    <label for="dateTo">To:</label>
+                     <div class='input-group dateTo'>
+                    <input class="form-control" name="dateTo"  /><br />
+                </div><br />
+
+                <input type="submit" class="btn btn-danger" value="Delete Them" /><br />
+                <small>The results will not be deleted immediately. Firstly will result shown and then you will have to decide if you want to delete them.</small>
+            </div>
+            </form>
+        </div>
+    </div>
+
+
+<script
+			  src="https://code.jquery.com/jquery-3.3.1.min.js"
+			  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+			  crossorigin="anonymous"></script>
+
+  <script src="/js/datepicker.js"></script>
+    <script>
+        var inputDateFrom = document.querySelector('input[name="dateFrom"]')
+        var inputDateTo = document.querySelector('input[name="dateTo"]')
+        var picker = datepicker(inputDateFrom)
+        var picker = datepicker(inputDateTo)
+
+    </script>
 
 
 </div>
