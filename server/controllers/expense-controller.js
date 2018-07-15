@@ -273,7 +273,7 @@ module.exports = {
                 availableProducts: products.length > 0,
                 availableCategories: categories.length > 0,
                 categories: categories,
-                totalExpense: expenseSumForAllProducts
+                totalExpense: expenseSumForAllProducts.toFixed(2)
               })
             })
           })
@@ -385,7 +385,7 @@ module.exports = {
 
         res.render('expenses/thisMonthExpenses', {
           expenses: expenses,
-          totalExpenseSum: totalExpenseSum,
+          totalExpenseSum: totalExpenseSum.toFixed(2),
           startDate: startDate,
           endMonth: endMonth,
           avgExpensePerDay: avgExpensePerDay.toFixed(2),
