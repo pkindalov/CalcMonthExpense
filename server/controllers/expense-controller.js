@@ -281,14 +281,17 @@ module.exports = {
   },
 
   seeAllExpenses: (req, res) => {
+    let user = req.user.id
     let page = parseInt(req.query.page) || 1
     let pageSize = 10
     let formattedDate = ''
     let sortAsc = req.query.sortAsc
+    let startMonth = dateHelpers.getThisMonthDateBegin(new Date())
+    let endMonth = dateHelpers.getCurrentMonth(new Date())
 
     if (sortAsc) {
       Expense
-      .find({})
+      .find({'user': user})
       .sort('date')
       .skip((page - 1) * pageSize)
       .limit(pageSize)
@@ -303,12 +306,14 @@ module.exports = {
           hasPrevPage: page > 1,
           hasNextPage: expenses.length > 0,
           prevPage: page - 1,
-          nextPage: page + 1
+          nextPage: page + 1,
+          startMonth: startMonth,
+          endMonth: endMonth
         })
       })
     } else {
       Expense
-        .find({})
+        .find({'user': user})
         .skip((page - 1) * pageSize)
         .limit(pageSize)
         .then(expenses => {
@@ -322,7 +327,9 @@ module.exports = {
             hasPrevPage: page > 1,
             hasNextPage: expenses.length > 0,
             prevPage: page - 1,
-            nextPage: page + 1
+            nextPage: page + 1,
+            startMonth: startMonth,
+            endMonth: endMonth
           })
         })
     }
@@ -557,6 +564,14 @@ module.exports = {
     let dateTo = req.query.dateTo
     let dateFrom = req.query.dateFrom
 
+   
+
+    if (!dateTo || !dateFrom || dateTo === '' || dateFrom === '') {
+      res.locals.globalError = 'Date fields cannot be empty'
+      res.redirect('/seeAllExpenses')
+      return
+    }
+
     let dateToConv = new Date(dateTo)
     let dateFromConv = new Date(dateFrom)
 
@@ -578,6 +593,12 @@ module.exports = {
     let user = req.user.id
     let dateTo = req.query.dateTo
     let dateFrom = req.query.dateFrom
+
+    if (!dateTo || !dateFrom || dateTo === '' || dateFrom === '') {
+      res.locals.globalError = 'Date fields cannot be empty'
+      res.redirect('/seeAllExpenses')
+      return
+    }
 
     let dateToConv = new Date(dateTo)
     let dateFromConv = new Date(dateFrom)
