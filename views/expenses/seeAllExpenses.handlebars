@@ -82,7 +82,7 @@
                  <div class="form-group">
                     <label for="dateFrom">from:</label>
                      <div class='input-group dateFrom'>
-                    <input class="form-control" name="dateFrom" value={{startMonth}}  /><br />
+                    <input class="form-control" name="dateFrom" value={{endMonth}}  /><br />
                 </div>
             </div>
 
@@ -99,6 +99,27 @@
         </div>
     </div>
 
+    <hr />
+
+    <div class="row">
+        <div class="col-lg-12">
+            <h3>Delete all expenses from date to now:</h3><br />
+            <form method="GET" action="/deleteExpensesFrom">
+                 <div class="form-group">
+                    <label for="dateFrom">from:</label>
+                     <div class='input-group deleteExpensesdateFrom'>
+                    <input class="form-control" name="deleteExpensesdateFrom" value={{endMonth}}  /><br />
+                </div>
+            </div>
+
+
+                <input type="submit" class="btn btn-danger" value="Delete Them" /><br />
+                <small>The results will not be deleted immediately. Firstly will result shown and then you will have to decide if you want to delete them.</small>
+            </div>
+            </form>
+        </div>
+    </div>
+
 
 <script
 			  src="https://code.jquery.com/jquery-3.3.1.min.js"
@@ -107,10 +128,12 @@
 
   <script src="/js/datepicker.js"></script>
     <script>
-        var inputDateFrom = document.querySelector('input[name="dateFrom"]')
-        var inputDateTo = document.querySelector('input[name="dateTo"]')
-        var picker = datepicker(inputDateFrom)
-        var picker = datepicker(inputDateTo)
+        let inputDateFrom = document.querySelector('input[name="dateFrom"]')
+        let inputDateTo = document.querySelector('input[name="dateTo"]')
+        let inputDeleteExpensesdateFrom = document.querySelector('input[name="deleteExpensesdateFrom"]')
+        let pickerOne = datepicker(inputDateFrom)
+        let pickerTwo = datepicker(inputDateTo)
+        let pickerThree = datepicker(inputDeleteExpensesdateFrom)
 
     </script>
 

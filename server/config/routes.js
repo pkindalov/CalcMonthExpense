@@ -37,6 +37,8 @@ module.exports = (app) => {
   app.get('/findExpByKeyword', auth.isAuthenticated, controllers.expenses.searchExpenseByKeyword)
   app.get('/deleteExpensesByPeriod', auth.isAuthenticated, controllers.expenses.deleteExpensesByAPeriod)
   app.post('/deleteExpensesByPeriod', auth.isAuthenticated, controllers.expenses.deleteExpensesByAPeriodPOST)
+  app.get('/deleteExpensesFrom', auth.isAuthenticated, controllers.expenses.deleteAllExpensesFromDateToNow)
+  app.post('/deleteExpensesFrom', auth.isAuthenticated, controllers.expenses.deleteAllExpensesFromDateToNowPOST)
 
   app.get('/showExpensesWithCategory', auth.isAuthenticated, controllers.categories.showExpensesByCategory)
 

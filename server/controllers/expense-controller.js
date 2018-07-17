@@ -286,7 +286,7 @@ module.exports = {
     let pageSize = 10
     let formattedDate = ''
     let sortAsc = req.query.sortAsc
-    let startMonth = dateHelpers.getThisMonthDateBegin(new Date())
+    // let startMonth = dateHelpers.getThisMonthDateBegin(new Date())
     let endMonth = dateHelpers.getCurrentMonth(new Date())
 
     if (sortAsc) {
@@ -307,7 +307,7 @@ module.exports = {
           hasNextPage: expenses.length > 0,
           prevPage: page - 1,
           nextPage: page + 1,
-          startMonth: startMonth,
+          // startMonth: startMonth,
           endMonth: endMonth
         })
       })
@@ -328,7 +328,7 @@ module.exports = {
             hasNextPage: expenses.length > 0,
             prevPage: page - 1,
             nextPage: page + 1,
-            startMonth: startMonth,
+            // startMonth: startMonth,
             endMonth: endMonth
           })
         })
@@ -564,8 +564,6 @@ module.exports = {
     let dateTo = req.query.dateTo
     let dateFrom = req.query.dateFrom
 
-   
-
     if (!dateTo || !dateFrom || dateTo === '' || dateFrom === '') {
       res.locals.globalError = 'Date fields cannot be empty'
       res.redirect('/seeAllExpenses')
@@ -583,6 +581,32 @@ module.exports = {
       })
       // console.log(expenses)
       res.render('expenses/deleteExpensesByPeriod', {
+        expenses: expenses,
+        notAvailable: expenses.length === 0
+      })
+    })
+  },
+
+  deleteAllExpensesFromDateToNow: (req, res) => {
+    let user = req.user.id
+    let dateFrom = req.query.deleteExpensesdateFrom
+
+    if (!dateFrom || dateFrom === '') {
+      res.locals.globalError = 'Date fields cannot be empty'
+      res.redirect('/seeAllExpenses')
+      return
+    }
+
+    let dateFromConv = new Date(dateFrom)
+
+    Expense
+    .find({'user': user, 'date': {'$gte': dateFromConv}})
+    .then(expenses => {
+      expenses.forEach(expense => {
+        expense.formattedDate = dateHelpers.getTodayDateWithoutTime(expense.date)
+      })
+      // console.log(expenses)
+      res.render('expenses/deleteExpensesFromToNow', {
         expenses: expenses,
         notAvailable: expenses.length === 0
       })
@@ -670,6 +694,91 @@ module.exports = {
 
     Expense
       .find({'user': user, 'date': {'$gte': dateFromConv, '$lte': dateToConv}})
+      .remove()
+      .then(
+        res.redirect('/')
+      )
+  },
+
+  deleteAllExpensesFromDateToNowPOST: (req, res) => {
+    let user = req.user.id
+    let dateFrom = req.query.deleteExpensesdateFrom
+
+    if ( !dateFrom || dateFrom === '') {
+      res.locals.globalError = 'Date fields cannot be empty'
+      res.redirect('/seeAllExpenses')
+      return
+    }
+
+    let dateFromConv = new Date(dateFrom)
+
+    let categoryPromises = []
+    let productsPromises = []
+    let userPromise = []
+
+    let userQuery = ''
+    let categoryQuery = ''
+    let productQuery = ''
+
+    let pos = 0
+
+    Expense
+      .find({'user': user, 'date': {'$gte': dateFromConv}})
+      .then(expenses => {
+        expenses.forEach(expense => {
+          userQuery = User.findById(expense.user)
+          userPromise.push(userQuery)
+
+          expense.categories.forEach(expenseCategoryID => {
+            categoryQuery = Category.findById(expenseCategoryID)
+            categoryPromises.push(categoryQuery)
+          })
+
+          expense.products.forEach(expenseProductID => {
+            productQuery = Product.findById(expenseProductID)
+            productsPromises.push(productQuery)
+          })
+
+          Promise.all(productsPromises)
+                          .then(products => {
+                            products.forEach(product => {
+                              for (let pos = 0; pos < product.expenses.length; pos++) {
+                                if (product.expenses[pos] === expense._id) {
+                                  product.expenses.splice(pos, 1)
+                                  product.save()
+                                }
+                              }
+                            })
+                          })
+
+          Promise.all(categoryPromises)
+                       .then(categories => {
+                         categories.forEach(category => {
+                           for (let pos = 0; pos < category.expenses.length; pos++) {
+                             if (category.expenses[pos] === expense._id) {
+                               category.expenses.splice(pos, 1)
+                               category.save()
+                             }
+                           }
+                         })
+                       })
+
+          Promise.all(userPromise)
+                         .then(users => {
+                           users.forEach(user => {
+                             for (let pos = 0; pos < user.expenses.length; pos++) {
+                               if (user.expenses[pos] === expense._id) {
+                                 user.expenses.splice(pos, 1)
+                                 user.save()
+                               }
+                             }
+                           })
+                         })
+        })
+      })
+
+    Expense
+      .find({'user': user, 'date': {'$gte': dateFromConv}})
       .remove()
       .then(
         res.redirect('/')
