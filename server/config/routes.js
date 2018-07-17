@@ -39,6 +39,8 @@ module.exports = (app) => {
   app.post('/deleteExpensesByPeriod', auth.isAuthenticated, controllers.expenses.deleteExpensesByAPeriodPOST)
   app.get('/deleteExpensesFrom', auth.isAuthenticated, controllers.expenses.deleteAllExpensesFromDateToNow)
   app.post('/deleteExpensesFrom', auth.isAuthenticated, controllers.expenses.deleteAllExpensesFromDateToNowPOST)
+  app.get('/deleteExpensesCurrentDateToPast', auth.isAuthenticated, controllers.expenses.deleteAllExpensesFromNowToAllPast)
+  app.post('/deleteExpensesCurrentDateToPast', auth.isAuthenticated, controllers.expenses.deleteAllExpensesFromNowToAllPastPOST)
 
   app.get('/showExpensesWithCategory', auth.isAuthenticated, controllers.categories.showExpensesByCategory)
 

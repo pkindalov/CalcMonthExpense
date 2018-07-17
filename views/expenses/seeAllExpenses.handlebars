@@ -118,6 +118,29 @@
             </div>
             </form>
         </div>
+
+
+    <hr />
+
+     <div class="row">
+        <div class="col-lg-12">
+            <h3>Delete all expenses from current date to all past days :</h3><br />
+            <form method="GET" action="/deleteExpensesCurrentDateToPast">
+                 <div class="form-group">
+                    <label for="dateTo">from:</label>
+                     <div class='input-group deleteExpensesCurrentDateToAllPast'>
+                    <input class="form-control" name="deleteExpensesCurrentDateToAllPast" value={{endMonth}}  /><br />
+                </div>
+            </div>
+
+
+                <input type="submit" class="btn btn-danger" value="Delete Them" /><br />
+                <small>The results will not be deleted immediately. Firstly will result shown and then you will have to decide if you want to delete them.</small>
+            </div>
+            </form>
+        </div>
+
+
     </div>
 
 
@@ -131,9 +154,11 @@
         let inputDateFrom = document.querySelector('input[name="dateFrom"]')
         let inputDateTo = document.querySelector('input[name="dateTo"]')
         let inputDeleteExpensesdateFrom = document.querySelector('input[name="deleteExpensesdateFrom"]')
+        let inputDeleteExpensesCurrentDateToAllPast = document.querySelector('input[name="deleteExpensesCurrentDateToAllPast"]')
         let pickerOne = datepicker(inputDateFrom)
         let pickerTwo = datepicker(inputDateTo)
         let pickerThree = datepicker(inputDeleteExpensesdateFrom)
+        let pickerFour = datepicker(inputDeleteExpensesCurrentDateToAllPast)
 
     </script>
 
