@@ -283,6 +283,43 @@ module.exports = {
     })
   },
 
+  expenseDetailsByIdAjax: (req, res) => {
+    let expenseId = req.query.id
+    let userId = req.user.id
+    let formattedDate = ''
+    let expenseSumForAllProducts = 0
+
+
+    Expense
+    .findById(expenseId)
+    .populate('products')
+    .populate('categories')
+    .then(expense => {
+      formattedDate = dateHelpers.getTodayDateWithoutTime(expense.date)
+      expense.formattedDate = formattedDate
+
+      Product
+          .find({'author': userId})
+          .populate('products')
+          .then(products => {
+            // console.log(expense.categories)
+
+            expense.products.forEach(product => {
+              let expense = Number(product.price)
+              expenseSumForAllProducts += expense
+            })
+
+           
+            // Category
+            // .find({'author': userId})
+            // .then(categories => {
+
+            // })
+          })
+      res.send(expense)
+    })
+  },
+
   seeAllExpenses: (req, res) => {
     let user = req.user.id
     let page = parseInt(req.query.page) || 1
