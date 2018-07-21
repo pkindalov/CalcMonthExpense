@@ -31,6 +31,7 @@ module.exports = (app) => {
   app.get('/expenseDetails', auth.isAuthenticated, controllers.expenses.expenseDetailsById)
   app.get('/seeAllExpenses', auth.isAuthenticated, controllers.expenses.seeAllExpenses)
   app.get('/thisMonthBalance', auth.isAuthenticated, controllers.expenses.thisMonthExpenses)
+  app.get('/getThisMonthBalanceAjax', auth.isAuthenticated, controllers.expenses.getThisMonthBalanceAjax)
   app.get('/editExpense', auth.isAuthenticated, controllers.expenses.editExpenseByIdGET)
   app.post('/editExpense', auth.isAuthenticated, controllers.expenses.editExpenseByIdPOST)
   app.get('/deleteExpense', auth.isAuthenticated, controllers.expenses.deleteExpenseByIdGET)

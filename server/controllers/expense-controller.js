@@ -11,7 +11,10 @@ module.exports = {
 
     Product
       .find({'author': currentUser})
+      .populate('category')
+      .sort('category')
       .then(products => {
+        // console.log(products)
         Category
           .find({'author': currentUser})
           .then(categories => {
@@ -408,6 +411,108 @@ module.exports = {
     // console.log(endMonth)
   },
 
+  getThisMonthBalanceAjax: (req, res) => {
+    let startDate = dateHelpers.getThisMonthDateBegin(new Date())
+    let endMonth = dateHelpers.getCurrentMonth(new Date())
+    // let todayDay = dateHelpers.getTodayDateWithoutTime(new Date())
+    let totalExpenseSum = 0
+    // let avgExpensePerDay = 0
+    // let avgExpenseUntilNow = 0
+    let user = req.user.id
+    let productPromises = []
+    let productPromise = ''
+
+    let startDateConv = new Date(startDate)
+    let endMonthConv = new Date(endMonth)
+
+    // let expensesArr = []
+
+    Expense
+      .find({'user': user, 'date': {'$gte': startDateConv, '$lte': endMonthConv}})
+      // .find({'date': {'$gte': new Date(startDate), '$lte': new Date(endMonth)}})
+      .populate('products')
+      .then(expenses => {
+        res.send(expenses)
+        // expenses.forEach(expense => {
+        //   expense.sum = 0
+        //   expense.products.forEach(product => {
+        //     expense.sum += Number(product._doc.price)
+
+        //   })
+        // })
+
+        // console.log(expenses)
+
+      //   expense.totalSum += Number(product.price)
+      //   expense.save()
+      //   expensesArr.push(expense)
+
+        // expenses.forEach(expense => {
+        //   // expense.totalExpenseSum = 0
+
+        //   expense.products.forEach(product => {
+        //     // Product
+        //     //                     .findById(product)
+        //     //                     .then(product => {
+        //     //                       expense.totalExpenseSum = 0
+        //     //                       expense.totalExpenseSum += Number(product.price)
+        //     //                       expense.save()
+        //     //                     })
+
+        //     productPromise = Product.findById(product)
+        //     productPromises.push(productPromise)
+        //   })
+
+        //   Promise.all(productPromises)
+        //                  .then(products => {
+        //                    products.forEach(product => {
+
+        //                      product[totalExpenseSum] += Number(product.price)
+        //                      product.save()
+        //                     //  expenses.push(expense)
+        //                    })
+
+        //                    console.log(products)
+        //                  })
+        // })
+
+        // for (let expense of expenses) {
+        //   expense.totalExpenseSum = 0
+        //   for (let product of expense.products) {
+        //     expense.totalExpenseSum += Number(product.price)
+        //     expense.save()
+        //   }
+        //   expenses.push(expense)
+        // }
+
+        // console.log(expenses)
+
+        // todayDay = Number(todayDay.split('-')[2])
+
+        // avgExpensePerDay = totalExpenseSum / expenses.length
+        // avgExpenseUntilNow = totalExpenseSum / todayDay
+
+        // res.render('expenses/thisMonthExpenses', {
+          //   expenses: expenses,
+          //   totalExpenseSum: totalExpenseSum.toFixed(2),
+          //   startDate: startDate,
+          //   endMonth: endMonth,
+          //   avgExpensePerDay: avgExpensePerDay.toFixed(2),
+          //   avgExpenseUntilNow: avgExpenseUntilNow.toFixed(2)
+          // })
+      })
+
+    // console.log(expensesArr.length)
+
+        // expenses.products.forEach(product => {
+          //   totalExpenseSum += Number(product.price)
+          // })
+
+    // res.send(expenses)
+    // console.log(startDate)
+    // console.log(endMonth)
+  },
+
   editExpenseByIdGET: (req, res) => {
     let expenseId = req.query.id
     let userId = req.user.id
@@ -730,7 +835,7 @@ module.exports = {
     let user = req.user.id
     let dateFrom = req.query.deleteExpensesdateFrom
 
-    if ( !dateFrom || dateFrom === '') {
+    if (!dateFrom || dateFrom === '') {
       res.locals.globalError = 'Date fields cannot be empty'
       res.redirect('/seeAllExpenses')
       return
