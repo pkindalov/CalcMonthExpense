@@ -13,6 +13,7 @@ module.exports = {
 
   registerPost: (req, res) => {
     let reqUser = req.body
+    let registerDate = dateHelpers.getTodayDateWithoutTime(new Date())
 
     // add validations
     // (if reqUser.username.length < 3)...
@@ -25,7 +26,8 @@ module.exports = {
       firstName: reqUser.firstName,
       lastName: reqUser.lastName,
       salt: salt,
-      hashedPass: hashedPassword
+      hashedPass: hashedPassword,
+      registeredOn: new Date(registerDate)
     }).then(user => {
       req.logIn(user, (err, user) => {
         if (err) {

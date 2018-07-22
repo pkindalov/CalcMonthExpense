@@ -57,6 +57,10 @@ module.exports = (app) => {
   app.post('/editCategory', auth.isAuthenticated, controllers.categories.editCategoryPOST)
   app.post('/deleteCategory', auth.isAuthenticated, controllers.categories.deleteCategory)
 
+  //admininistration routes
+  app.get('/administration', auth.isInRole('Admin'), controllers.administration.administrationGET)
+  app.get('/administrationAJAX', auth.isInRole('Admin'), controllers.administration.administrationAJAX)
+
   app.all('*', (req, res) => {
     res.status(404)
     res.send('404 Not found')

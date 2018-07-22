@@ -13,7 +13,8 @@ let userSchema = new mongoose.Schema({
   roles: [String],
   expenses: [{type: ObjectId, ref: 'Expense'}],
   products: [{type: ObjectId, ref: 'Product'}],
-  categories: [{type: ObjectId, ref: 'Category'}]
+  categories: [{type: ObjectId, ref: 'Category'}],
+  registeredOn: {type: Date, default: Date.now}
 })
 
 userSchema.method({
