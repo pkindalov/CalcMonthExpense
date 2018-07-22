@@ -21,6 +21,9 @@
                 <li><a href="/createCategory">2.Create Category</a></li>
                 <li><a href="/createExpense">3.Create Expense</a></li>
                 <li><a href="/getExpensesPeriod">Expenses Settings</a></li>
+                 {{#if isAdmin}}
+                    <li><a href="/administration">Administration</a></li>
+               {{/if}}
 
                 <li>
                     <form id="logout-form" action="/users/logout" method="POST"></form>
@@ -30,9 +33,7 @@
                 <li><a href="/users/register">REGISTER</a></li>
                 <li><a href="/users/login">LOGIN</a></li>
             {{/if}}
-             {{#if isAdmin}}
-              
-            {{/if}}
+            
            
         </ul>
     </div>

@@ -47,6 +47,24 @@ module.exports = {
 
     let endOfMonthDate = currentYear + '-' + currentMonth + '-' + currentMonthDays
     return endOfMonthDate
+  },
+
+  getCurrentMonthYYddMM: (date) => {
+    let currentMonth = date.getMonth() + 1
+    let currentYear = date.getFullYear()
+
+    let currentMonthDays = new Date(currentYear, currentMonth, 0).getDate()
+
+    if (currentMonthDays < 10) {
+      currentMonthDays = '0' + currentMonthDays
+    }
+
+    if (currentMonth < 10) {
+      currentMonth = '0' + currentMonth
+    }
+
+    let endOfMonthDate = currentYear + '-' + currentMonthDays + '-' + currentMonth
+    return endOfMonthDate
   }
 
 }
