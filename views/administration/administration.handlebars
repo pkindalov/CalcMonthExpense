@@ -1,0 +1,119 @@
+<script
+			  src="https://code.jquery.com/jquery-3.3.1.js"
+			  integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+			  crossorigin="anonymous"></script>
+
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+
+    $.ajax('http://localhost:1337/administrationAJAX', {
+        method: 'GET',
+        success: function (data) {
+
+            let startDate = $('#startDate').val()
+            let endDate = $('#endDate').val()
+
+    let row = [startDate, endDate, data.length]
+
+      google.charts.load('current', {'packages':['sankey']});
+      google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'From');
+        data.addColumn('string', 'To');
+        data.addColumn('number', 'Registered New Users');
+        data.addRows([
+          row       
+        ]);
+
+        // Sets chart options.
+        var options = {
+          width: 600,
+        };
+
+        // Instantiates and draws our chart, passing in some options.
+        var chart = new google.visualization.Sankey(document.getElementById('sankey_basic'));
+        chart.draw(data, options);
+      }
+
+
+        }
+
+
+    })
+    </script>
+
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12">
+            <h1> Wellcome to Administration Page</h1>
+            <hr />
+            {{#if currentMontRegisteredUsers}}
+                <p>No registered users this month</p>
+            {{else}}
+               <div id="sankey_basic" style="width: 900px; height: 300px;"></div>
+               <input type="hidden" id="startDate" value={{startDate}} />
+               <input type="hidden" id="endDate" value={{endDate}} />
+ 
+                <p>Count of newly registered users this month: <a href="#" class="showHideRegThisMonthUsers"> {{registeredUsers.length}}</a></p>
+                <div id="newUsersInfo">
+                    <ul>
+                        {{#each registeredUsers}}
+                            <li>{{this.username}} -> {{this.firstName}} {{this.lastName}} -> expenses: {{this.expenses.length}} , products: {{this.products.length}}, categories: {{this.categories.length}}</li>
+                        {{/each}}
+                    </ul>
+                </div>
+            {{/if}}
+
+            <p>Total count of registered users: <a href="#" class="totalRegUsers"> {{totalUsers.length}}</a></p>
+            <div id="totalRegisteredUsers">
+                <ul>
+                        {{#each totalUsers}}
+                            <li>{{this.username}} -> {{this.firstName}} {{this.lastName}} -> expenses: {{this.expenses.length}} , products: {{this.products.length}}, categories: {{this.categories.length}}</li>
+                        {{/each}}
+                    </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+$(document).ready(function(){
+    $('#newUsersInfo').hide()
+    let showCurrMonthRegUsers = false
+
+    $('#totalRegisteredUsers').hide()
+    let showTotalRegUsers = false
+
+    $('.showHideRegThisMonthUsers').click(function(){
+        showCurrMonthRegUsers = !showCurrMonthRegUsers
+
+        if(showCurrMonthRegUsers){
+            $('#newUsersInfo').show()
+        }else {
+            $('#newUsersInfo').hide()
+       }        
+    })
+
+    $('.totalRegUsers').click(function(){
+      
+        showTotalRegUsers = !showTotalRegUsers
+
+        if(showTotalRegUsers){
+            $('#totalRegisteredUsers').show()
+        } else {
+            $('#totalRegisteredUsers').hide()
+        }
+    })
+
+
+
+})
+
+</script>
+
