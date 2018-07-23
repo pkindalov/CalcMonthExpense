@@ -44,5 +44,21 @@ module.exports = {
       .then(registerUsersTimeInterval => {
         res.send(registerUsersTimeInterval)
       })
+  },
+
+  showAdminUsersAJAX: (req, res) => {
+    User
+      .find({'roles': 'Admin'})
+      .then(foundedAdmins => {
+        res.send(foundedAdmins)
+      })
+  },
+
+  listAllUsersNotAdmins: (req, res) => {
+    User
+      .find({'roles': {'$ne': 'Admin'}})
+      .then(users => {
+        res.send(users)
+      })
   }
 }

@@ -76,7 +76,15 @@
                         {{/each}}
                     </ul>
             </div>
+        <hr />
         </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <a href="#" class="btn btn-default" id="showAdminUsers">Show Admin Users</a>
+            <a href="#" class="btn btn-default" id="showAllUsers">Show Users</a>
+            <div id="usersContainer"></div>
     </div>
 </div>
 
@@ -111,6 +119,59 @@ $(document).ready(function(){
         }
     })
 
+
+    //query - showAllAdmins
+     let container = $('#usersContainer')
+     let ulCont = $('<ul></ul>')
+
+    $('#showAdminUsers').click(function(event){
+        event.preventDefault()
+        container.empty()
+
+        $.ajax('http://localhost:1337/showAllAdmins', {
+            method: 'GET',
+            success: function (admins) {
+                let infoContainer = $('<ul></ul>')
+               for(let admin of admins){
+                   let li = $('<li></li>')
+                   let removeAdminLink = $(`<a href="/removeAdminRights?userId=${admin._id}">Remove Admin</a>`)
+                   li.append(admin.username)
+                   li.append(removeAdminLink)
+                   infoContainer.append(li)
+
+               }
+
+               container.append(infoContainer)
+            }
+        })
+    })
+
+    $('#showAllUsers').click(function(event){
+        event.preventDefault()
+        container.empty()
+
+        $.ajax('http://localhost:1337/listUsersNotAdmins', {
+            method: 'GET', 
+            success: function (users) {
+                
+                  let infoContainer = $('<ul></ul>')
+
+                 for(let user of users){
+                   let li = $('<li></li>')
+                   let makeAdminLink = $(`<a href="/makeAdmin?userId=${user._id}">Make Admin</a>`)
+                   let userDetailsLink =  $(`<a href="/userDetails?userId=${user._id}">User Details</a>`)
+                   li.append(user.username)
+                   li.append(makeAdminLink)
+                   li.append(userDetailsLink)
+                   infoContainer.append(li)
+               }
+
+               container.append(infoContainer)
+            }
+        })
+
+    })
+    
 
 
 })

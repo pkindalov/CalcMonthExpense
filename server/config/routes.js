@@ -60,6 +60,8 @@ module.exports = (app) => {
   //admininistration routes
   app.get('/administration', auth.isInRole('Admin'), controllers.administration.administrationGET)
   app.get('/administrationAJAX', auth.isInRole('Admin'), controllers.administration.administrationAJAX)
+  app.get('/showAllAdmins', auth.isInRole('Admin'), controllers.administration.showAdminUsersAJAX)
+  app.get('/listUsersNotAdmins', auth.isInRole('Admin'), controllers.administration.listAllUsersNotAdmins)
 
   app.all('*', (req, res) => {
     res.status(404)
