@@ -10,25 +10,20 @@ module.exports = {
     let start = new Date(monthBeginDate)
     let end = new Date(endOfTheMonth)
 
-
     User
       .find({'registeredOn': {'$gte': start, '$lt': end}})
       .then(registerUsersTimeInterval => {
-
         User
             .find({})
             .then(totalUsers => {
-                res.render('administration/administration', {
-                  currentMontRegisteredUsers: registerUsersTimeInterval.length === 0,
-                  registeredUsers: registerUsersTimeInterval,
-                  startDate: monthBeginDate,
-                  endDate: endOfTheMonth,
-                  totalUsers: totalUsers
-                })
-
-
+              res.render('administration/administration', {
+                currentMontRegisteredUsers: registerUsersTimeInterval.length === 0,
+                registeredUsers: registerUsersTimeInterval,
+                startDate: monthBeginDate,
+                endDate: endOfTheMonth,
+                totalUsers: totalUsers
+              })
             })
-
       })
   },
 
@@ -59,6 +54,62 @@ module.exports = {
       .find({'roles': {'$ne': 'Admin'}})
       .then(users => {
         res.send(users)
+      })
+  },
+
+  makeUserAdminGET: (req, res) => {
+    let userId = req.query.userId
+
+    User
+      .findById(userId)
+      .then(user => {
+        user.roles.push('Admin')
+        user.save()
+      })
+
+    res.redirect('/administration')
+  },
+
+  removeAdminRights: (req, res) => {
+    let userId = req.query.userId
+
+    User
+      .findById(userId)
+      .then(user => {
+        user.roles = []
+        user.save()
+      })
+
+    res.redirect('/administration')
+  },
+
+  adminGetUserDetails: (req, res) => {
+    let userId = req.query.userId
+
+    User
+      .findById(userId)
+      .populate('expenses')
+      .populate('products')
+      .populate('categories')
+      .then(user => {
+        user.regFormattedDate = dateHelpers.getTodayDateWithoutTime(user.registeredOn)
+        res.render('administration/adminGetUserDetails', {
+          user: user
+        })
+      })
+  },
+
+  adminGetUserDetailsAJAX: (req, res) => {
+    let userId = req.query.userId
+
+    User
+      .findById(userId)
+      .populate('expenses')
+      .populate('products')
+      .populate('categories')
+      .then(user => {
+        user.regFormattedDate = dateHelpers.getTodayDateWithoutTime(user.registeredOn)
+        res.send(user)
       })
   }
 }

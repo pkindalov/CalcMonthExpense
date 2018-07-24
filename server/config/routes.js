@@ -62,6 +62,10 @@ module.exports = (app) => {
   app.get('/administrationAJAX', auth.isInRole('Admin'), controllers.administration.administrationAJAX)
   app.get('/showAllAdmins', auth.isInRole('Admin'), controllers.administration.showAdminUsersAJAX)
   app.get('/listUsersNotAdmins', auth.isInRole('Admin'), controllers.administration.listAllUsersNotAdmins)
+  app.get('/makeAdmin', auth.isInRole('Admin'), controllers.administration.makeUserAdminGET)
+  app.get('/removeAdminRights', auth.isInRole('Admin'), controllers.administration.removeAdminRights)
+  app.get('/userDetails', auth.isInRole('Admin'), controllers.administration.adminGetUserDetails)
+  app.get('/adminGetUserDetailsAJAX', auth.isInRole('Admin'), controllers.administration.adminGetUserDetailsAJAX)
 
   app.all('*', (req, res) => {
     res.status(404)
