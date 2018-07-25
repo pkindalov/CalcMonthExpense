@@ -5,6 +5,11 @@
     <hr />
  {{/if}}
 
+    <div id="columnchart_material" style="width: 800px; height: 500px;"></div>
+    <input type="hidden" id="userId" value={{userId}} />
+
+    <hr />
+
     <h3>Yours last 5 days expenses</h3>
 
  {{#if noAvailableExpenses}}
@@ -64,3 +69,71 @@
 <a class="btn btn-default" href="/settings">Settings</a>
 
 </div>
+
+
+<script
+			  src="https://code.jquery.com/jquery-3.3.1.js"
+			  integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+			  crossorigin="anonymous"></script>
+
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+
+    $(document).ready(function(){
+        let userId = $('#userId').val()
+       
+        
+        $.ajax(`http://localhost:1337/adminGetUserDetailsAJAX?userId=${userId}`, {
+            method: 'GET',
+            success: function(user) {
+
+            google.charts.load('current', {'packages':['bar']});
+            google.charts.setOnLoadCallback(drawChart);
+
+            let chartContainer = new Array()
+            chartContainer.push(['Year', 'Products', 'Expenses', 'Categories'])
+            let row = new Array()
+            let formattedDate = user.registeredOn.split('T')[0]
+
+            user.expenses.forEach(expense => {
+            row = [expense.date.toString(), user.products.length, user.expenses.length, user.categories.length]
+            console.log(row)
+            chartContainer.push(row)
+                
+            })
+            //row.push(formattedDate.split('-')[0], user.products.length, user.expenses.length, user.categories.length)
+
+
+            //chartContainer.push(row)
+
+
+           
+
+
+            function drawChart() {
+                var data = google.visualization.arrayToDataTable(chartContainer); 
+
+                var options = {
+                chart: {
+                    title: `Information about Products, Expenses and Category created by ${user.username} from date of register ${formattedDate} `,
+                    subtitle: `Products, Expenses, and Category: ${formattedDate}`,
+                }
+                };
+
+                var chart = new google.charts.Bar(document.getElementById('columnchart_material'));
+
+                chart.draw(data, google.charts.Bar.convertOptions(options));
+            }
+
+
+
+
+            }
+        })
+
+
+
+    })
+
+
+    </script>

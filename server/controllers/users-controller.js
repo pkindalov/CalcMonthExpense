@@ -101,7 +101,8 @@ module.exports = {
               expenses: expenses,
               todayExpense: todayExpense,
               noAvailableExpenses: expenses.length === 0,
-              formattedDate: formattedDate
+              formattedDate: formattedDate,
+              userId: userId
             })
           })
       })
