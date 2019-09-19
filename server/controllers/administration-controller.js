@@ -1,41 +1,41 @@
-const User = require('../data/User')
-const dateHelpers = require('../utilities/dateHelpers')
+const User = require('../data/User');
+const dateHelpers = require('../utilities/dateHelpers');
 
 module.exports = {
 
   administrationGET: (req, res) => {
-    let monthBeginDate = dateHelpers.getThisMonthDateBegin(new Date())
-    let endOfTheMonth = dateHelpers.getCurrentMonth(new Date())
+    let monthBeginDate = dateHelpers.getThisMonthDateBegin(new Date());
+    let endOfTheMonth = dateHelpers.getCurrentMonth(new Date());
 
-    let start = new Date(monthBeginDate)
-    let end = new Date(endOfTheMonth)
+    let start = new Date(monthBeginDate);
+    let end = new Date(endOfTheMonth);
 
     User
-      .find({'registeredOn': {'$gte': start, '$lt': end}})
+      .find({ 'registeredOn': { '$gte': start, '$lt': end } })
       .then(registerUsersTimeInterval => {
         User
-            .find({})
-            .then(totalUsers => {
-              res.render('administration/administration', {
-                currentMontRegisteredUsers: registerUsersTimeInterval.length === 0,
-                registeredUsers: registerUsersTimeInterval,
-                startDate: monthBeginDate,
-                endDate: endOfTheMonth,
-                totalUsers: totalUsers
-              })
+          .find({})
+          .then(totalUsers => {
+            res.render('administration/administration', {
+              currentMontRegisteredUsers: registerUsersTimeInterval.length === 0,
+              registeredUsers: registerUsersTimeInterval,
+              startDate: monthBeginDate,
+              endDate: endOfTheMonth,
+              totalUsers: totalUsers
             })
+          })
       })
   },
 
   administrationAJAX: (req, res) => {
-    let monthBeginDate = dateHelpers.getThisMonthDateBegin(new Date())
-    let endOfTheMonth = dateHelpers.getCurrentMonth(new Date())
+    let monthBeginDate = dateHelpers.getThisMonthDateBegin(new Date());
+    let endOfTheMonth = dateHelpers.getCurrentMonth(new Date());
 
-    let start = new Date(monthBeginDate)
-    let end = new Date(endOfTheMonth)
+    let start = new Date(monthBeginDate);
+    let end = new Date(endOfTheMonth);
 
     User
-      .find({'registeredOn': {'$gte': start, '$lt': end}})
+      .find({ 'registeredOn': { '$gte': start, '$lt': end } })
       .then(registerUsersTimeInterval => {
         res.send(registerUsersTimeInterval)
       })
@@ -43,44 +43,45 @@ module.exports = {
 
   showAdminUsersAJAX: (req, res) => {
     User
-      .find({'roles': 'Admin'})
+      .find({ 'roles': 'Admin' })
       .then(foundedAdmins => {
-        res.send(foundedAdmins)
+        res.send(foundedAdmins);
       })
   },
 
   listAllUsersNotAdmins: (req, res) => {
     User
-      .find({'roles': {'$ne': 'Admin'}})
+      .find({ 'roles': { '$ne': 'Admin' } })
       .then(users => {
-        res.send(users)
+        res.send(users);
       })
   },
 
   makeUserAdminGET: (req, res) => {
-    let userId = req.query.userId
+    let userId = req.query.userId;
 
     User
       .findById(userId)
       .then(user => {
-        user.roles.push('Admin')
-        user.save()
+        // user.roles.push('Admin')
+        user.roles = user.roles.concat('Admin');
+        user.save();
       })
 
     res.redirect('/administration')
   },
 
   removeAdminRights: (req, res) => {
-    let userId = req.query.userId
+    let userId = req.query.userId;
 
     User
       .findById(userId)
       .then(user => {
-        user.roles = []
-        user.save()
+        user.roles = [];
+        user.save();
       })
 
-    res.redirect('/administration')
+    res.redirect('/administration');
   },
 
   adminGetUserDetails: (req, res) => {
@@ -100,7 +101,7 @@ module.exports = {
   },
 
   adminGetUserDetailsAJAX: (req, res) => {
-    let userId = req.query.userId
+    let userId = req.query.userId;
 
     User
       .findById(userId)
@@ -108,8 +109,8 @@ module.exports = {
       .populate('products')
       .populate('categories')
       .then(user => {
-        user.regFormattedDate = dateHelpers.getTodayDateWithoutTime(user.registeredOn)
-        res.send(user)
+        user.regFormattedDate = dateHelpers.getTodayDateWithoutTime(user.registeredOn);
+        res.send(user);
       })
   }
 }

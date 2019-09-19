@@ -1,14 +1,14 @@
-const Product = require('../data/Product')
-const Expense = require('../data/Expense')
-const Category = require('../data/Category')
-const User = require('../data/User')
+const Product = require('../data/Product');
+const Expense = require('../data/Expense');
+const Category = require('../data/Category');
+const User = require('../data/User');
 
 module.exports = {
   createProductGET: (req, res) => {
-    let user = req.user.id
+    let user = req.user.id;
 
     Category
-      .find({'author': user})
+      .find({ 'author': user })
       .then(categories => {
         res.render('products/createProduct', {
           availableCategories: categories.length > 0,
@@ -18,18 +18,18 @@ module.exports = {
   },
 
   createProductPOST: (req, res) => {
-    let reqBody = req.body
+    let reqBody = req.body;
 
-    let productName = reqBody.name
-    let productPrice = reqBody.price
-    let productPhoto = reqBody.photo
-    let productAuthor = req.user.id
-    let needed = (reqBody.needed === 'true')
-    let productDescription = reqBody.description
-    let productCategory = reqBody.category
+    let productName = reqBody.name;
+    let productPrice = reqBody.price;
+    let productPhoto = reqBody.photo;
+    let productAuthor = req.user.id;
+    let needed = (reqBody.needed === 'true');
+    let productDescription = reqBody.description;
+    let productCategory = reqBody.category;
 
     Category
-      .find({'author': productAuthor})
+      .find({ 'author': productAuthor })
       .then(categories => {
         if (categories.length === 0) {
           res.render('products/createProduct', {
@@ -37,75 +37,78 @@ module.exports = {
           })
         } else {
           Product
-              .create({
-                author: productAuthor,
-                name: productName,
-                price: productPrice,
-                photo: productPhoto,
-                isItAbsolutelyNeeded: needed,
-                description: productDescription,
-                category: productCategory
-              }).then(createdProduct => {
-                User
-                    .findById(productAuthor)
-                    .then(productAuthor => {
-                      let ifThisProductExists = productAuthor.products.indexOf(createdProduct._id)
+            .create({
+              author: productAuthor,
+              name: productName,
+              price: productPrice,
+              photo: productPhoto,
+              isItAbsolutelyNeeded: needed,
+              description: productDescription,
+              category: productCategory
+            }).then(createdProduct => {
+              User
+                .findById(productAuthor)
+                .then(productAuthor => {
+                  let ifThisProductExists = productAuthor.products.indexOf(createdProduct._id);
 
-                      if (ifThisProductExists < 0) {
-                        productAuthor.products.push(createdProduct._id)
-                        productAuthor.save()
-                      } else {
-                        res.locals.globalError = 'This product already exists'
-                      }
-                      res.redirect('/')
-                    })
-              })
+                  if (ifThisProductExists < 0) {
+                    // productAuthor.products.push(createdProduct._id);
+                    productAuthor.products = productAuthor.products.concat(createdProduct._id);
+                    productAuthor.save();
+                  } else {
+                    res.locals.globalError = 'This product already exists';
+                  }
+                  res.redirect('/');
+                })
+            })
         }
       })
   },
 
   addProductToExpense: (req, res) => {
-    let reqBody = req.body
-    let productId = reqBody.product
-    let expenseId = req.query.id
-    let count = Number(reqBody.count)
-    let url = '/expenseDetails?id=' + expenseId
+    let reqBody = req.body;
+    let productId = reqBody.product;
+    let expenseId = req.query.id;
+    let count = Number(reqBody.count);
+    let url = '/expenseDetails?id=' + expenseId;
 
     Product
-    .findById(productId)
-    .then(product => {
-      Expense
-      .findById(expenseId)
-      .then(expense => {
-        product.expenses.push(expense._id)
-        product.save()
+      .findById(productId)
+      .then(product => {
+        Expense
+          .findById(expenseId)
+          .then(expense => {
+            product.expenses = product.expenses.concat(expense._id);
+            // product.expenses.push(expense._id);
+            product.save();
 
-        for (let n = 0; n < count; n++) {
-          expense.products.push(productId)
-        }
+            for (let n = 0; n < count; n++) {
+              // expense.products.push(productId);
+              expense.products = expense.products.concat(productId);
+            }
 
-        // let dayExpense = Number(expense.totalDayExpense)
-        // dayExpense += Number(product.price)
-        // expense.totalDayExpense = '' + dayExpense
-        expense.save()
+            // let dayExpense = Number(expense.totalDayExpense)
+            // dayExpense += Number(product.price)
+            // expense.totalDayExpense = '' + dayExpense
+            expense.save();
+          })
       })
-    })
 
-    res.redirect(url)
+    res.redirect(url);
   },
 
   removeProductFromExpense: (req, res) => {
-    let expenseId = req.query.id
-    let reqBody = req.body
-    let productId = reqBody.product
-    let url = '/expenseDetails?id=' + expenseId
+    let expenseId = req.query.id;
+    let reqBody = req.body;
+    let productId = reqBody.product;
+    let url = '/expenseDetails?id=' + expenseId;
 
     Expense
       .findById(expenseId)
       .then(expense => {
-        let productPos = expense.products.indexOf(productId)
+        let productPos = expense.products.indexOf(productId);
         if (productPos > -1) {
-          expense.products.splice(productPos, 1)
+          expense.products.splice(productPos, 1);
         }
         // expense.save()
 
@@ -114,8 +117,8 @@ module.exports = {
           .then(product => {
             let pos = product.expenses.indexOf(expense._id)
             if (pos > -1) {
-              product.expenses.splice(pos, 1)
-              product.save()
+              product.expenses.splice(pos, 1);
+              product.save();
             }
 
             // let totalDayExpense = Number(expense.totalDayExpense)
@@ -126,31 +129,31 @@ module.exports = {
             // }
 
             // expense.totalDayExpense = '' + totalDayExpense
-            expense.save()
+            expense.save();
           })
       })
     res.redirect(url)
   },
 
   selectProductForEdit: (req, res) => {
-    let author = req.user.id
+    let author = req.user.id;
 
     Product
-        .find({'author': author})
-        .then(products => {
-          // console.log(products)
-          res.render('products/selectProductForEdit', {
-            products: products
-          })
+      .find({ 'author': author })
+      .then(products => {
+        // console.log(products)
+        res.render('products/selectProductForEdit', {
+          products: products
         })
+      })
   },
 
   editProductGET: (req, res) => {
-    let productId = req.query.product
-    let userId = req.user.id
+    let productId = req.query.product;
+    let userId = req.user.id;
 
     Category
-      .find({'author': userId})
+      .find({ 'author': userId })
       .then(categories => {
         Product
           .findById(productId)
@@ -167,22 +170,22 @@ module.exports = {
   },
 
   editProductPOST: (req, res) => {
-    let productId = req.query.product
-    let reqBody = req.body
-    let editedName = reqBody.name
-    let editedPrice = reqBody.price
-    let editedPhoto = reqBody.photo
-    let editedNeeded = (reqBody.needed === 'true')
-    let editedDescription = reqBody.description
-    let editedCategory = reqBody.category
+    let productId = req.query.product;
+    let reqBody = req.body;
+    let editedName = reqBody.name;
+    let editedPrice = reqBody.price;
+    let editedPhoto = reqBody.photo;
+    let editedNeeded = (reqBody.needed === 'true');
+    let editedDescription = reqBody.description;
+    let editedCategory = reqBody.category;
 
     if (editedDescription.length < 1) {
-      let productId = req.query.product
-      let userId = req.user.id
-      let globalError = 'Description field cannot be empty'
+      let productId = req.query.product;
+      let userId = req.user.id;
+      let globalError = 'Description field cannot be empty';
 
       Category
-        .find({'author': userId})
+        .find({ 'author': userId })
         .then(categories => {
           Product
             .findById(productId)
@@ -198,26 +201,26 @@ module.exports = {
             })
         })
 
-        return
+      return
     }
 
     Product
       .findById(productId)
       .then(product => {
-        product.name = editedName
-        product.price = editedPrice
-        product.photo = editedPhoto
-        product.isItAbsolutelyNeeded = editedNeeded
-        product.description = editedDescription
-        product.category = editedCategory
-        product.save()
+        product.name = editedName;
+        product.price = editedPrice;
+        product.photo = editedPhoto;
+        product.isItAbsolutelyNeeded = editedNeeded;
+        product.description = editedDescription;
+        product.category = editedCategory;
+        product.save();
       })
     res.redirect('/selectProductForEdit')
   },
 
   deleteProductByIdGET: (req, res) => {
-    let productId = req.query.product
-    let user = req.user.id
+    let productId = req.query.product;
+    let user = req.user.id;
 
     Product
       .findByIdAndRemove(productId)
@@ -228,9 +231,9 @@ module.exports = {
 
         for (let expense of deletedProduct.expenses) {
           if (expense.products.indexOf(deletedProductId) > -1) {
-            let pos = expense.products.indexOf(deletedProductId)
-            expense.products.splice(pos)
-            expense.save()
+            let pos = expense.products.indexOf(deletedProductId);
+            expense.products.splice(pos);
+            expense.save();
           }
         }
 
@@ -239,14 +242,14 @@ module.exports = {
           .then(user => {
             let productPos = user.products.indexOf(deletedProduct._id)
             if (productPos > -1) {
-              user.products.splice(productPos, 1)
-              user.save()
+              user.products.splice(productPos, 1);
+              user.save();
             } else {
-              res.locals.globalError = 'Not found such product..'
+              res.locals.globalError = 'Not found such product..';
             }
           })
       })
 
-    res.redirect('/')
+    res.redirect('/');
   }
 }
