@@ -46,15 +46,15 @@
 
 
 
-<div class="container">
-    <div class="row">
+
+    <div class="row text-center">
         <div class="col-lg-12">
             <h1> Wellcome to Administration Page</h1>
             <hr />
             {{#if currentMontRegisteredUsers}}
                 <p>No registered users this month</p>
             {{else}}
-               <div id="sankey_basic" style="width: 900px; height: 300px;"></div>
+               <div id="sankey_basic"></div>
                <input type="hidden" id="startDate" value={{startDate}} />
                <input type="hidden" id="endDate" value={{endDate}} />
  
@@ -86,7 +86,7 @@
             <a href="#" class="btn btn-default" id="showAllUsers">Show Users</a>
             <div id="usersContainer"></div>
     </div>
-</div>
+
 
 
 <script>
