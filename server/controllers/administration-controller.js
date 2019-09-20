@@ -108,9 +108,31 @@ module.exports = {
       .populate('expenses')
       .populate('products')
       .populate('categories')
-      .then(user => {
+      .then((user) => {
+        user = user.toObject();
         user.regFormattedDate = dateHelpers.getTodayDateWithoutTime(user.registeredOn);
+
+        if (user.hasOwnProperty('salt')) {
+          delete user.salt;
+        }
+
+        if (user.hasOwnProperty('hashedPass')) {
+          delete user.hashedPass;
+        }
+
+        if (user.hasOwnProperty('firstName')) {
+          delete user.firstName;
+        }
+
+        if (user.hasOwnProperty('lastName')) {
+          delete user.lastName;
+        }
+
+
         res.send(user);
-      })
+
+
+      });
+
   }
 }
